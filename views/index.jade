@@ -1,0 +1,30 @@
+extends layout
+
+block content
+  h1= title
+  p ID1: 300067113, ID2: 200940914
+  h2= titleOfPage
+    form#searchBox(action='/client')
+      br
+      h4= 'Place a new order:'
+      input(type='text', name='order')
+      br
+      br
+      input(type='submit', value='New Order')
+      br
+      br
+      h4= 'Check up on exisitng order: '
+      input(type='text', name='query')
+      br
+      br
+      input(type='submit', value='Existing order')
+    h3= qTitle
+    h4= qResult
+    br
+    br
+  button(onclick = "returnhome()") Return to Home Screen
+  script.
+    function returnhome() {
+      window.location.href = '/'
+    }
+

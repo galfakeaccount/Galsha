@@ -1,0 +1,29 @@
+//This is a main navigation of the project
+   Created by Master K on 14/08/2015.
+
+extends layout
+title = 'Module Chooser'
+block content
+   h1= 'Welcome to Farmers Direct!'
+   h2= 'Please choose your module:'
+   br
+   button(onclick="client()") Client Module
+   script.
+      function client() {
+         window.location.href = '/client'
+      }
+   button(onclick = "farmer()") Farmer Module
+   script.
+      function farmer() {
+         window.location.href = '/farmer'
+      }
+   button(onclick = "centers()") Logistical Centers Module
+      script.
+         function centers() {
+            window.location.href = '/centers'
+         }
+   br
+   br
+   h4= 'Created as a final project for Cloud Computing, IDC, 2015'
+
+
