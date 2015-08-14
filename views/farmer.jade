@@ -1,26 +1,34 @@
 extends layout
+script(src='lib/jquery/jquery-1.7.1.min.js')
 
 block content
   h1= 'Farmer backend interface'
   h2= 'Here you can manage all related aspecs of supply, demand and order fullfilment'
-    form#searchBox(action='/farmer')
-      br
-      h4= 'Place a new order:'
-      input(type='text', name='order')
-      br
-      br
-      input(type='submit', value='New Order')
-      br
-      br
-      h4= 'Check up on exisitng order: '
-      input(type='text', name='query')
-      br
-      br
-      input(type='submit', value='Existing order')
-    h3= qTitle
-    h4= qResult
-    br
-    br
+
+  div.navbar.navbar-fixed-top
+    div.navbar-inner
+      div.container
+        a(data-toggle='collapse',data-target='.nav-collapse').btn.btn-navbar
+        a(href='#').brand #{title}
+        div.nav-collapse
+          ul.nav
+            li.active
+              a(href='#') Home
+            li
+              a(href='#') Blog
+            li
+              a(href='#') Contact
+            li(id='menu1').dropdown
+              a(data-toggle='dropdown', href='#menu1').dropdown-toogle Dropdown
+                b.caret
+              ul.dropdown-menu
+                li
+                  a(href='#') Test
+                li
+                  a(href='#') Test2
+  script $('.dropdown-toggle').dropdown()
+
+  br
   button(onclick = "returnhome()") Return to Home Screen
   script.
     function returnhome() {
