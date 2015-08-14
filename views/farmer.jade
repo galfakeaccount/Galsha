@@ -4,7 +4,15 @@ script(src='lib/jquery/jquery-1.7.1.min.js')
 block content
   h1= 'Farmer backend interface'
   h4= 'Here you can manage all related aspecs of supply, demand and order fullfilment'
+  br
 
+  form(action='/farmer')
+    select(name='option')
+      option(value='p') Pending orders
+      option(value='c') Completed Orders
+      option(value='q') Quota Managment
+    br
+    input(type='submit')
 
   br
   button(onclick = "returnhome()") Return to Home Screen
