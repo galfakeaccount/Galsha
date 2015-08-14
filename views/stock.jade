@@ -1,0 +1,17 @@
+extends layout
+block content
+   h1= 'Stock Summery'
+   p Total Farmers Offering For This Week
+   table
+      thead
+         tr#headtag
+            th Item
+            th In stock (KG)
+            th Ordered (KG)
+      tbody
+         each item in items
+            tr
+               td= item.Name
+               td= item.InStock
+               td= item.Ordered
+

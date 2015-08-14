@@ -11,6 +11,8 @@ var fs = require('fs');
 var routes = require('./routes/index');
 var client = require('./routes/client');
 var farmer = require('./routes/farmer');
+var center = require('./routes/center');
+
 
 var app = express();
 
@@ -24,9 +26,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/farmer', farmer);
-app.use('/client', client);
 app.use('/', routes);
+app.use('/client', client);
+app.use('/farmer', farmer);
+app.use('/center', center);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -59,3 +63,11 @@ app.use(function(err, req, res, next) {
   });
 });
 module.exports = app;
+
+// Open server for listening
+var server = app.listen(3000, function () {
+  host = server.address().address;
+  port = server.address().port;
+
+  console.log('LOG: Example app listening at http://%s:%s', host, port);
+});

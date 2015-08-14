@@ -1,0 +1,27 @@
+extends layout
+block content
+   h1= 'Distribution Center interface'
+   p Here you can manage all orders, shipping centers, and stock.
+   br
+   h2= 'Summery'
+   case shippingDay
+      when 0: p Next shipping day is Monday
+      when 1: p Next shipping day is Thursday
+      default: p Next shipping day is unknown
+   p Orders for next shipping day: #{numberOfOrders}
+   br
+   button(onclick="checkStock()") Check Stock
+   script.
+      function checkStock() {
+         window.location.href = '/stock'
+      }
+   button(onclick = "orderStatus()") Order Status
+   script.
+      function orderStatus() {
+         window.location.href = '/ordersStatus'
+      }
+   button(onclick = "organise()") Organise Next Shipment Day
+      script.
+         function organise() {
+            window.location.href = '/organise'
+         }

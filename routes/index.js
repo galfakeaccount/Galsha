@@ -42,4 +42,20 @@ router.get('/client', function(req, res) {
       qResult: ''
     })}});
 
+router.get('/center', function(req, res, next) {
+  res.render('center', {"shippingDay": 0, "numberOfOrders": 230});
+});
+
+router.get('/stock', function(req, res, next) {
+  // get summery of stock
+  console.log('LOG:stock status');
+
+  //getSummeryOfStock(items);
+  var items = [
+    {"Name":"bananas", "InStock":12, "Ordered":3},
+    {"Name":"tomatos", "InStock":34, "Ordered":23}
+  ];
+  res.render('stock', items);
+});
+
 module.exports = router;
