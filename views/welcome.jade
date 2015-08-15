@@ -5,7 +5,26 @@ extends layout
 title = 'Module Chooser'
 block content
    h1= 'Welcome to Farmers Direct!'
-   h2= 'Please choose your module from menu above'
+   p We at <b>Farmers Direct</b> belive in saving money for the little guy and giving back to our hard working farmers.
+      p If you would like to be a part of our farmers group
+         button.btn(onclick = "farmer()") Be a farmer
+            script.
+               function farmer() {
+                  window.location.href = '/farmer'
+               }
+      p If you would like to save some money and order some fresh goods
+         button.btn(onclick = "client()") Make an order
+            script.
+               function client() {
+                  window.location.href = '/client'
+               }
+      p If you are the bose running this great thing
+
+         button.btn(onclick = "center()") My Distribution Center dash
+            script.
+               function center() {
+                  window.location.href = '/center'
+               }
    br
 
 

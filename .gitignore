@@ -2,3 +2,5 @@
 awscred.json
 
 .idea/workspace.xml
+
+*.xml
