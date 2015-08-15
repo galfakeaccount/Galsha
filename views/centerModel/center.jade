@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 block content
    h1= 'Distribution Center interface'
    p Here you can manage all orders, shipping centers, and stock.
@@ -10,17 +10,17 @@ block content
       default: p Next shipping day is unknown
    p Orders for next shipping day: <b>#{numberOfOrders}</b>
    br
-   button(onclick="checkStock()") Check Stock
+   button.btn(onclick="checkStock()") Check Stock
    script.
       function checkStock() {
          window.location.href = '/center/stock'
       }
-   button(onclick = "orderStatus()") Order Status
+   button.btn(onclick = "orderStatus()") Order Status
    script.
       function orderStatus() {
          window.location.href = '/center/orders'
       }
-   button(onclick = "organise()") Organise Next Shipment Day
+   button.btn(onclick = "organise()") Organise Next Shipment Day
       script.
          function organise() {
             window.location.href = '/center/organise'

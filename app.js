@@ -30,6 +30,9 @@ app.use('/farmer', farmer);
 app.use('/client', client);
 app.use('/center', center);
 app.use('/', routes);
+app.post('/orders', function(req,res){
+  console.log(req.body);
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

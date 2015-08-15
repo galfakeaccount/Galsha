@@ -1,0 +1,33 @@
+extends ../layout
+block content
+   h1= 'Get Orders'
+   div
+      form(action='/orders',method='post')
+         div#shipment_day(data-role='fieldcontain')
+            fieldset(data-role='controlgroup')
+               h4 Choose Shipping day:
+               select(name='shipping_day')
+                  option(value='0') Monday
+                  option(value='1') Thersday
+                  option(value='2') Both
+         div#dist_centers(data-role='fieldcontain')
+            fieldset(data-role='controlgroup' name=centers)
+               h4 Choose Distribution Centers:
+               label.checkbox.inline
+                  input#inlineCheckbox1(type='checkbox',value='tlv1')
+                  | TLV1
+               label.checkbox.inline
+                  input#inlineCheckbox2(type='checkbox',value='tlv2')
+                  | TLV2
+               label.checkbox.inline
+                  input#inlineCheckbox3(type='checkbox',value='haifa1')
+                  | Haifa1
+               label.checkbox.inline
+                  input#inlineCheckbox3(type='checkbox',value='jerusalem')
+                  | Jerusalem
+               label.checkbox.inline
+                  input#inlineCheckbox3(type='checkbox',value='bash')
+                  | Beer Sheva
+         div(data-role='fieldcontain')
+            button.btn(type='submit') Get Orders
+
