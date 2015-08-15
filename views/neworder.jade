@@ -4,8 +4,8 @@ block content
   h1= title
   h3= qTitle
 
-  form(action='/client/neworder/done', method='POST')
-    fieldset
+  form(action='action_page.php', method='POST')
+    fieldset#pdetails
       legend Personal information:
       | First name:
       br
@@ -19,8 +19,7 @@ block content
       br
       input(type='text', name='lastname')
       br
-      br
-    fieldset
+    fieldset#sdetails
       legend Shipment information:
       | Please choose the your preferred shipment day:
       br
@@ -40,10 +39,9 @@ block content
         option(value='google') Google Offices
         option(value='intel') Intel Haifa
         option(value='microsoft') Microsoft Hertzeliya
-      br
-      br
-    fieldset
+    fieldset#orderdetails
       legend What would you like to order?
+    input(type='submit', value='Submit')
 
 
   h4= qResult
