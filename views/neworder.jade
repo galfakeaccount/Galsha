@@ -3,22 +3,49 @@ extends layout
 block content
   h1= title
   h3= qTitle
-  h3= titleOfPage
-    form#searchBox(action='/client')
-      br
-      h4= 'Place a new order:'
-      input(type='text', name='order')
-      br
-      br
-      input(type='submit', value='New Order')
-      br
-      br
-      h4= 'Check up on exisitng order: '
-      input(type='text', name='query')
-      br
-      br
-      input(type='submit', value='Existing order')
 
-    h4= qResult
+  form(action='/client/neworder/done', method='POST')
+    fieldset
+      legend Personal information:
+      | First name:
+      br
+      input(type='text', name='firstname', value='Omer')
+      br
+      | Last name:
+      br
+      input(type='text', name='lastname', value='Keshet')
+      br
+      | Address:
+      br
+      input(type='text', name='lastname')
+      br
+      br
+    fieldset
+      legend Shipment information:
+      | Please choose the your preferred shipment day:
+      br
+      input(type='radio', name='dday', value='monday', checked='')
+      | Monday
+      br
+      input(type='radio', name='dday', value='thursday')
+      | Thursday
+      br
+      br
+      p
+        | ** All orders placed are dispatched in the next shipment day, for example - order on Tuesday for monday - you will receive your order on Monday, the following week. Order on Sunday for monday, you will recieve your order on Monday, the day after.
+      br
+      | Choose your preferred pick-up center:
+      br
+      select
+        option(value='google') Google Offices
+        option(value='intel') Intel Haifa
+        option(value='microsoft') Microsoft Hertzeliya
+      br
+      br
+    fieldset
+      legend What would you like to order?
+
+
+  h4= qResult
 
 

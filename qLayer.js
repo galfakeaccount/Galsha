@@ -7,10 +7,10 @@ AWS.config.loadFromPath('./awscred.json'); //Load the credentials from the JSON 
 AWS.config.region = 'us-east-1'; //N. Virginia
 var dynamodb = new AWS.DynamoDB(); //New DynamoDB Instance
 
-function getName(req, callback) {
+function getDetails(req, callback) {
     console.log("In get name");
     var params = { //Params to be sent according to the structure of the table (In PDF file).
-        "TableName": "ClientDB",
+        "TableName": "ClientDB2",
         "KeyConditionExpression":  "Phone = :phoneval",
         "ExpressionAttributeValues": {
             ":phoneval": {"N": req}
@@ -23,8 +23,8 @@ function getName(req, callback) {
             console.log(err); // an error occurred
         }
         else {
-            console.log(data.Items[0].Name.S); // successful response
-            callback(data.Items[0].Name.S); //Return the name
+            console.log(data.Items[0]); // successful response
+            callback(data.Items[0].FirstName.S +" "+data.Items[0].Surname.S); //Return the name
         }
     });
 }
@@ -63,4 +63,4 @@ function getResults(req, callback) {
 }
 
 exports.getResults = getResults;
-exports.getName = getName;
+exports.getDetails = getDetails;

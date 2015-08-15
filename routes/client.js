@@ -20,10 +20,10 @@ router.get('/neworder', function(req, res) {
   console.log(req.query.query);
   query = req.query.query;
   if (query.length != 0 && query != '{') { //There is a value in query
-    qLayer.getName(query, function (name){
+    qLayer.getDetails(query, function (name){
         res.render('neworder', {
           title: 'New Order',
-          qTitle: 'Hello '+name +', Welcome back', //Get the name that is assositated to the phone number from the client DB on DynamoDB
+          qTitle: 'Hello '+name +', Welcome back!', //Get the name that is assositated to the phone number from the client DB on DynamoDB
           qResult: '' //Here store all the form for the order
         });
       });
