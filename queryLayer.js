@@ -27,7 +27,7 @@ function getResults(req, callback) {
         }
         else {
             console.log(JSON.stringify(data));
-            for (var id in data.Items) { //Build the response string to be sent back to index.js
+            for (var id in data.Items) { //Build the response string to be sent back to welcome.js
                 var website = JSON.stringify(data.Items[id]);
                 //console.log(website);
                 var location = website.indexOf("}") - 1;

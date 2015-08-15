@@ -17,7 +17,7 @@ router.get('/', function(req, res) {
   query = query.substring(n+2, query.length-2);
   if (query.length != 0 && query != '{') {
     qLayer.getResults(query, function (queryresult) {
-      res.render('index', {
+      res.render('client', {
         title: 'Client side - order managment',
         qTitle: 'Results for key: ' + query,
         qResult: queryresult
@@ -25,7 +25,7 @@ router.get('/', function(req, res) {
     });
   }
   else{
-    res.render('index', {
+    res.render('client', {
       title: 'Client side - Order managment',
       titleOfPage: 'Place a new order or check existing one: ',
       qTitle: '',
@@ -44,7 +44,7 @@ router.get('/neworder', function(req, res) {
   query = query.substring(n+2, query.length-2);
   if (query.length != 0 && query != '{') {
     qLayer.getResults(query, function (queryresult) {
-      res.render('index', {
+      res.render('client', {
         title: 'Client side - order managment',
         qTitle: 'Results for key: ' + query,
         qResult: queryresult
@@ -52,7 +52,7 @@ router.get('/neworder', function(req, res) {
     });
   }
   else{
-    res.render('index', {
+    res.render('client', {
       title: 'Client side - Order managment',
       titleOfPage: 'Place a new order or check existing one: ',
       qTitle: '',
