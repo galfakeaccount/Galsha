@@ -5,8 +5,8 @@
 var express = require('express');
 var router = express.Router();
 var qLayer = require('../qLayer.js');
-/* GET Client page. */
 
+/* GET Client page. */
 router.get('/', function(req, res) {
   res.render('client', {
       title: 'Client side - Order managment',
@@ -14,8 +14,8 @@ router.get('/', function(req, res) {
       qTitle: '',
       qResult: ''
     })});
-/* GET Client page. */
 
+/* GET New order page. */
 router.get('/neworder', function(req, res) {
   console.log(req.query.query);
   query = req.query.query;
@@ -35,5 +35,20 @@ router.get('/neworder', function(req, res) {
       qTitle: 'Please enter valid phone ',
       qResult: ''
     })}});
+
+/* GET execute order page. */
+router.post('/placeorder', function(req, res) {
+  console.log(req);
+  query = req.query.query;
+  if (query.length != 0 && query != '{') { //There is a value in query
+    qLayer.getDetails(query, function (name) {
+      res.render('orderDone', {
+        title: 'Thank you ' + name + ', your order has been placed.',
+        qTitle: '',
+        qResult: ''
+      });
+    });
+  }
+});
 
 module.exports = router;

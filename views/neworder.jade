@@ -4,7 +4,7 @@ block content
   h1= title
   h3= qTitle
 
-  form(action='action_page.php', method='POST')
+  form(action='/client/placeorder', method='post')
     fieldset#pdetails
       legend Personal information:
       | First name:
@@ -17,7 +17,7 @@ block content
       br
       | Address:
       br
-      input(type='text', name='lastname')
+      input(type='text', name='address')
       br
     fieldset#sdetails
       legend Shipment information:
