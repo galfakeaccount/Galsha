@@ -28,7 +28,7 @@ router.get('/neworder', function(req, res) {
           phoneN: query,
           fName: data.Items[0].FirstName.S,
           sName: data.Items[0].Surname.S,
-          storedAddress: '20 Mazeh St, Tel Aviv',
+          storedAddress: data.Items[0].Address.S,
           qTitle: 'Hello '+data.Items[0].FirstName.S +', Welcome back!', //Get the name that is assosiated to the phone number from the client DB on DynamoDB
           qResult: '' //Here store all the form for the order
         });
@@ -97,14 +97,17 @@ router.get('/pullorder', function(req, res) {
   console.log(req);
   qLayer.retrieveOrder(req.query.orderID, function (data) {
     if (data.Count != 0) {//Results found
-      var yr = req.query.orderID.substring(0,4);
-      var month = req.query.orderID.substring(5,6);
+      console.log(data.Items[0].supplyDate.N);
+      var fulldate = (data.Items[0].supplyDate.N);
+      var yr = fulldate.substring(4,8);
+      var month = fulldate.substring(2,4);
+      var day = fulldate.substring(0,2);
       res.render('pullorder', {
         title: 'Order History',
         titleOfPage: 'Here are the details for order ' +req.query.orderID+ ':',
-        oApples: data.Items[0].Apple.N,
+        oApples: data.Items[0].Apples.N,
         oTomatoes: data.Items[0].Tomatoes.N,
-        oDate: ''+month+'/'+yr,
+        oDate: ''+day+'/'+month+'/'+yr,
         qTitle: '',
         qResult: ''
       })
