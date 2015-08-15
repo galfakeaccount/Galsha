@@ -11,14 +11,14 @@ var ordersQueueUri = 'https://sqs.us-east-1.amazonaws.com/016493201532/farmersDi
 var ordersCounter;
 
 function getDetails(req, callback) {
-    console.log("In get name");
+    //console.log("In get name");
+    //console.log(req);
     var params = { //Params to be sent according to the structure of the table (In PDF file).
         "TableName": "ClientDB2",
         "KeyConditionExpression":  "Phone = :phoneval",
         "ExpressionAttributeValues": {
             ":phoneval": {"N": req}
         }
-
     }
 
     dynamodb.query(params, function(err, data) {
@@ -26,22 +26,50 @@ function getDetails(req, callback) {
             console.log(err); // an error occurred
         }
         else {
-            console.log(data.Items[0]); // successful response
             callback(data);
             //callback(data.Items[0].FirstName.S +" "+data.Items[0].Surname.S); //Return the name
         }
     });
 }
+function addDetails(req, callback) {
+    //console.log("In add name");
+    //console.log(req);
+    var params = { //Params to be sent according to the structure of the table (In PDF file).
+        Item: {
+            Phone: {
+                N: req.phone
+            },
+            Address: {
+                S: req.address
+            },
+            FirstName: {
+                S: req.firstname
+            },
+            Surname: {
+                S: req.lastname
+            }
+        },
+        TableName: "ClientDB2"
+    }
 
+    dynamodb.putItem(params, function(err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            callback();
+            //callback(data.Items[0].FirstName.S +" "+data.Items[0].Surname.S); //Return the name
+        }
+    });
+}
 function getOrders(req, callback) { //Query all orders under specific phone number
-    console.log("In get orders");
+    //console.log("In get orders");
     var params = { //Params to be sent according to the structure of the table (In PDF file).
         "TableName": "ordersDB",
         "KeyConditionExpression":  "Phone = :phoneval",
         "ExpressionAttributeValues": {
             ":phoneval": {"S": req}
         }
-
     }
 
     dynamodb.query(params, function(err, data) {
@@ -56,8 +84,8 @@ function getOrders(req, callback) { //Query all orders under specific phone numb
 }
 
 function retrieveOrder(req, callback) { //Get a specific order
-    console.log("In retrieve order");
-    console.log(req);
+    //console.log("In retrieve order");
+    //console.log(req);
     if (req) {
         var params = { //Params to be sent according to the structure of the table (In PDF file).
             "TableName": "orderByID",
@@ -65,15 +93,14 @@ function retrieveOrder(req, callback) { //Get a specific order
             "ExpressionAttributeValues": {
                 ":orderval": {"S": req}
             }
-
         }
 
         dynamodb.query(params, function (err, data) {
             if (err) {
-                console.log(err); // an error occurred
+                //console.log(err); // an error occurred
             }
             else {
-                console.log(data); // successful response
+                //console.log(data); // successful response
                 callback(data);
             }
         });
@@ -84,8 +111,8 @@ function retrieveOrder(req, callback) { //Get a specific order
 }
 
 function sendOrder(req, callback) {
-    console.log(req);
-    console.log("In send order to DB");
+    //console.log(req);
+    //console.log("In send order to DB");
     //Get counter from dynamoDB
     var miniparams = {
         TableName: 'sequenceOrder',
@@ -97,7 +124,7 @@ function sendOrder(req, callback) {
     }
     dynamodb.getItem(miniparams, function (error, counter) {
         if (error) {
-            console.log("Error: ", error, error.stack);
+            //console.log("Error: ", error, error.stack);
         } else {
             ordersCounter = counter.Item.SeqVal.N;
             var params = {
@@ -122,7 +149,7 @@ function sendOrder(req, callback) {
             };
             dynamodb.putItem(params, function (error, data) {
                 if (error) {
-                    console.log("Error: ", error, error.stack);
+                    //console.log("Error: ", error, error.stack);
                 } else {
                     //Add to orderByID
                     var tomatoGr = 0;
@@ -286,3 +313,4 @@ exports.getOrders = getOrders;
 exports.retrieveOrder = retrieveOrder;
 exports.getQuota = getQuota;
 exports.updateQuota = updateQuota;
+exports.addDetails = addDetails;

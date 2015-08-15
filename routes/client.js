@@ -56,9 +56,13 @@ router.get('/neworder', function(req, res) {
 
 /* POST execute order page. */
 router.post('/placeorder', function(req, res) {
-  console.log(req.body);
   //Search for client on ClientDB - add it
-
+  qLayer.getDetails(req.body.phone, function (data){
+    if (data.Count == 0){//No entry - add it
+      console.log("No matches found on DB - Adding to our client DB table")
+      qLayer.addDetails(req.body)
+    }
+  });
   //Send order info to dynamoDB
   qLayer.sendOrder(req.body, function (data) {
     res.render('orderdone', {

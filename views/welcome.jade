@@ -9,21 +9,21 @@ block content
    br
    p We at <b>Farmers Direct</b> belive in saving money for the little guy and giving back to our hard working farmers.
    div.container
-      p If you would like to be a part of our farmers group
-         button.btn(onclick = "farmer()") Be a farmer
+      p If you are a partner farmer or would like to join as one
+         button.btn(onclick = "farmer()") Farmer's Portal
             script.
                function farmer() {
                   window.location.href = '/farmer'
                }
-      p If you would like to save some money and order some fresh goods
+      p If you would like to save money and enjoy premium quality vegetables and fruits
          button.btn(onclick = "client()") Make an order
             script.
                function client() {
                   window.location.href = '/client'
                }
-      p If you are the bose running this great thing
+      p If you are the boss running this great scheme
 
-         button.btn(onclick = "center()") My Distribution Center dash
+         button.btn(onclick = "center()") Distribution Center Portal
             script.
                function center() {
                   window.location.href = '/center'
