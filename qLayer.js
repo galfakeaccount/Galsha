@@ -88,13 +88,10 @@ function sendOrder(req, callback){
                 S: req.phone
             },
             deliveryDate: {
-                S: "27082016"
+                S: req.ddate
             },
             Center: {
                 S: req.pickuploc
-            },
-            deliveryDay: {
-                S: req.dday
             },
             Status: {
                 S: "OPEN"

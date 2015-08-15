@@ -71,17 +71,9 @@ block content
             legend Shipment information:
             | Please choose the your preferred shipment day:
             br
-            input(type='radio', name='dday', value='M', checked='')
-            | Monday
             br
-            input(type='radio', name='dday', value='T')
-            | Thursday
+            input#datepicker(name='ddate')
             br
-            br
-            input#datepicker
-            br
-            p
-              | ** All orders placed are dispatched in the next shipment day, for example - order on Tuesday for monday - you will receive your order on Monday, the following week. Order on Sunday for monday, you will recieve your order on Monday, the day after.
             br
             | Choose your preferred pick-up center:
             br
