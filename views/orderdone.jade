@@ -4,7 +4,11 @@ block content
   h1= title
   h3= qTitle
   body
-
+    button.btn(onclick = "backHome()") Return Home
+      script.
+        function backHome() {
+          window.location.href = '/'
+        }
   h4= qResult
 
 

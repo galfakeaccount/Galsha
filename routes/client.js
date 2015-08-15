@@ -59,9 +59,9 @@ router.post('/placeorder', function(req, res) {
   //Search for client on ClientDB - add it
 
   //Send order info to dynamoDB
-  qLayer.sendOrder(req.body, function (res) {
-    res.render('orderDone', {
-      title: 'Thank you ' +res + ', your order has been placed.',
+  qLayer.sendOrder(req.body, function (data) {
+    res.render('orderdone', {
+      title: 'Thank you ' +req.body.firstname+ ', your order has been placed.',
       qTitle: '',
       qResult: ''
     });

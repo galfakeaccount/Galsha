@@ -8,6 +8,7 @@ AWS.config.region = 'us-east-1'; //N. Virginia
 var dynamodb = new AWS.DynamoDB(); //New DynamoDB Instance
 var sqs = new AWS.SQS();
 var ordersQueueUri = 'https://sqs.us-east-1.amazonaws.com/016493201532/farmersDirectOrders';
+var d = new Date();
 
 function getDetails(req, callback) {
     console.log("In get name");
@@ -77,81 +78,75 @@ function retrieveOrder(req, callback) { //Get a specific order
     });
 }
 
-function sendSQS(req, callback){
-    console.log("In SQS send order to queue");
+function sendOrder(req, callback){
+    console.log(req);
+    console.log("In send order to DB");
+    // N: d.getDay()+d.getMonth()+d.getYear()
     var params = {
-        MessageBody: "New order from " + req.FirstName +' '+req.Surname,
-        QueueUrl: ordersQueueUri,
-        DelaySeconds: 0,
-        MessageAttributes: { //This are the actual order information
+        Item: {
             Phone: {
-                DataType: 'STRING_VALUE', /* required */
-                BinaryListValues: [
-                    "0547263799",
-                ]
-            },
-            Apples: {
-                DataType: 'STRING_VALUE', /* required */
-                BinaryListValues: [
-                    new Buffer('...') || 'STRING_VALUE',
-                    /* more items */
-                ],
-                BinaryValue: new Buffer('...') || 'STRING_VALUE',
-                StringListValues: [
-                    'STRING_VALUE',
-                    /* more items */
-                ],
-                StringValue: 'STRING_VALUE'
-            },
-            Tomatoes: {
-                DataType: 'STRING_VALUE', /* required */
-                BinaryListValues: [
-                    new Buffer('...') || 'STRING_VALUE',
-                    /* more items */
-                ],
-                BinaryValue: new Buffer('...') || 'STRING_VALUE',
-                StringListValues: [
-                    'STRING_VALUE',
-                    /* more items */
-                ],
-                StringValue: 'STRING_VALUE'
+                S: req.phone
             },
             Date: {
-                DataType: 'STRING_VALUE', /* required */
-                BinaryListValues: [
-                    new Buffer('...') || 'STRING_VALUE',
-                    /* more items */
-                ],
-                BinaryValue: new Buffer('...') || 'STRING_VALUE',
-                StringListValues: [
-                    'STRING_VALUE',
-                    /* more items */
-                ],
-                StringValue: 'STRING_VALUE'
+                N: "15082016"
             },
-            Day: {
-                DataType: 'STRING_VALUE', /* required */
-                BinaryListValues: [
-                    new Buffer('...') || 'STRING_VALUE',
-                    /* more items */
-                ],
-                BinaryValue: new Buffer('...') || 'STRING_VALUE',
-                StringListValues: [
-                    'STRING_VALUE',
-                    /* more items */
-                ],
-                StringValue: 'STRING_VALUE'
+            Status: {
+                S: "OPEN"
+            },
+            OrderID: {
+                S: "201508"+"050"
             }
-        }
+        },
+        TableName: "ordersDB"
     };
-    sqs.sendMessage(params, function (err, data) {
-        if (err) {
-            console.log("Error: ", err);
-        } // an error occurred
-        else {
-            console.log('Victory, message sent for ' + encodeURIComponent(request.params.name) + '!');
-            callback(req.FirstName +' '+req.Surname);
-        };
+    dynamodb.putItem(params, function (error, data) {
+        if (error) {
+            console.log("Error: ", error, error.stack);
+        } else {
+            //Add to orderByID
+            var tomatoGr = 0;
+            var appleGr = 0;
+            i = 0;
+            if(Object.prototype.toString.call( req.item ) === '[object Array]' ) { //There are multiple entries in order
+                req.item.forEach(function(entry) {
+                    if(entry == 'tomatoes'){
+                        tomatoGr = (tomatoGr*1 + req.amount[i]*1);
+                    }
+                    if (entry == 'apples'){
+                        appleGr = (appleGr*1 + req.amount[i]*1);
+                    }
+                    i++;
+                })
+            }
+            else{ //Only single value
+                if(req.item == 'tomatoes'){
+                    tomatoGr = req.amount;
+                }
+                if (req.item == 'apples'){
+                    appleGr = req.amount;
+                }
+            }
+            var paramsTwo = {
+                Item: {
+                    orderID: {
+                        S: "201508"+"050"
+                    },
+                    Apple: {
+                        N: ""+appleGr
+                    },
+                    Tomatoes: {
+                        N: ""+tomatoGr
+                    }
+                },
+                TableName: "orderByID"
+            };
+            dynamodb.putItem(paramsTwo, function (error, data) {
+                if (error) {
+                    console.log("Error: ", error, error.stack);
+                } else {
+                    callback();
+                }
+            })}
     });
 }
 function getResults(req, callback) {
@@ -190,6 +185,6 @@ function getResults(req, callback) {
 
 exports.getResults = getResults;
 exports.getDetails = getDetails;
-exports.sendSQS = sendSQS;
+exports.sendOrder = sendOrder;
 exports.getOrders = getOrders;
 exports.retrieveOrder = retrieveOrder;
