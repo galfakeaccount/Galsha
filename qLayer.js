@@ -111,7 +111,7 @@ function sendOrder(req, callback) {
                     Center: {
                         S: req.pickuploc
                     },
-                    Status: {
+                    orderStatus: {
                         S: "OPEN"
                     },
                     orderID: {
@@ -201,7 +201,21 @@ function sendOrder(req, callback) {
 
     //Set new Counter
 
-
+function getQuota(callback){
+    console.log("In get quota");
+    var params = { //Params to be sent according to the structure of the table (In PDF file).
+        "TableName": "farmersQuota"
+    }
+    dynamodb.scan(params, function (err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data); // successful response
+            callback(data);
+        }
+    })
+}
 function getResults(req, callback) {
     //console.log("Entered getResults");
     //console.log(req);
@@ -241,3 +255,4 @@ exports.getDetails = getDetails;
 exports.sendOrder = sendOrder;
 exports.getOrders = getOrders;
 exports.retrieveOrder = retrieveOrder;
+exports.getQuota = getQuota;

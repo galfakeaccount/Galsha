@@ -4,6 +4,7 @@
 //General Setting
 var express = require('express');
 var router = express.Router();
+var qLayer = require('../qLayer.js');
 
 /* GET farmers page. */
 router.get('/', function(req, res) {
@@ -13,24 +14,36 @@ router.get('/', function(req, res) {
       //console.log("In Pending Orders")
       res.render('farmer', {
         infoTitle: 'Your pending orders:',
-        qResult: 'Bla bla test test '
+        resultValues: 'Pending',
+        qResult: 'Bla bla test test ' //Put here the stuff you pull out of dynamoDB
       })
     }
-    else{
+    else {
       if (req.query.option == 'c') { //If Completed orders is chosen
         //console.log("In Complete Orders")
+        res.render('farmer', {
+          infoTitle: 'Your completed orders:',
+          resultValues: 'Completed',
+          qResult: 'Bla bla test test ' //Put here the stuff you pull out of dynamoDB
+        })
       }
       else {
         if (req.query.option == 'q') {//If Quota Managment is chosen
-          //console.log("In Quota Managment")
+          qLayer.getQuota(function (data) {
+            res.render('farmer', {
+              infoTitle: 'Your current quota:',
+              resultValues: 'Quota',
+              qResult: data //Put here the stuff you pull out of dynamoDB
+            })
+          })
         }
         else { //Nothing else
           res.render('farmer')
-        };
+        }
       }
     }
   }
-})
+});
 
 
 

@@ -14,4 +14,79 @@ block content
     br
     button.btn(type='submit') Submit
   h3= infoTitle
-  h4= qResult
+  if resultValues == 'Quota'
+    if qResult == '[object Object]'
+      table
+        tr
+          td
+            center
+              b Farmer's Name
+          td
+            center
+              b Items Description
+          td
+            center
+              b Quota in KGs
+        each val in qResult.Items
+          tr
+            td
+              center= val.farmerName.S +'   '
+            td
+              center= val.offeredGoods.S +'   '
+            td
+              center= val.Capacity.N
+    else
+      h4= qResult
+
+  if resultValues == 'Completed'
+    if qResult == '[object Object]'
+      table
+        tr
+          td
+            center
+              b Farmer's Name
+          td
+            center
+              b Order Date
+          td
+            center
+              b Apples (KG)
+          td
+            center
+              b Tomatoes (KG)
+        each val in qResult.Items
+          tr
+            td
+              center= val.farmerName.S +'   '
+            td
+              center= val.offeredGoods.S +'   '
+            td
+              center= val.Capacity.N
+    else
+      h4= qResult
+  if resultValues == 'Pending'
+    if qResult == '[object Object]'
+      table
+        tr
+          td
+            center
+              b Farmer's Name
+          td
+            center
+              b Order Date
+          td
+            center
+              b Apples (KG)
+          td
+            center
+              b Tomatoes (KG)
+        each val in qResult.Items
+          tr
+            td
+              center= val.farmerName.S +'   '
+            td
+              center= val.offeredGoods.S +'   '
+            td
+              center= val.Capacity.N
+    else
+      h4= qResult
