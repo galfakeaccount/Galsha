@@ -62,12 +62,3 @@ app.use(function(err, req, res, next) {
   });
 });
 module.exports = app;
-
-
-// Open server for listening
-var server = app.listen(3000, function () {
-  host = server.address().address;
-  port = server.address().port;
-
-  console.log('LOG: Example app listening at http://%s:%s', host, port);
-});

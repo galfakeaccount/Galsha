@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  h1= title
+  h3= titleOfPage
+    form#searchBox(action='/client')
+      br
+      h4= 'Place a new order:'
+      input(type='text', name='order')
+      br
+      br
+      input(type='submit', value='New Order')
+      br
+      br
+      h4= 'Check up on exisitng order: '
+      input(type='text', name='query')
+      br
+      br
+      input(type='submit', value='Existing order')
+    h3= qTitle
+    h4= qResult
+
+

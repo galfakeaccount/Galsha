@@ -31,4 +31,32 @@ router.get('/', function(req, res) {
       qTitle: '',
       qResult: ''
     })}});
+
+/* GET Client page. */
+
+router.get('/neworder', function(req, res) {
+  var url = require('url');
+  var url_parts = url.parse(req.url, true);
+  var query = url_parts.query;
+  var queryresult = "*";
+  query = JSON.stringify(query);
+  var n = query.indexOf(":");
+  query = query.substring(n+2, query.length-2);
+  if (query.length != 0 && query != '{') {
+    qLayer.getResults(query, function (queryresult) {
+      res.render('index', {
+        title: 'Client side - order managment',
+        qTitle: 'Results for key: ' + query,
+        qResult: queryresult
+      });
+    });
+  }
+  else{
+    res.render('index', {
+      title: 'Client side - Order managment',
+      titleOfPage: 'Place a new order or check existing one: ',
+      qTitle: '',
+      qResult: ''
+    })}});
+
 module.exports = router;

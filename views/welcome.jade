@@ -5,22 +5,8 @@ extends layout
 title = 'Module Chooser'
 block content
    h1= 'Welcome to Farmers Direct!'
-   h2= 'Please choose your module:'
+   h2= 'Please choose your module from menu above'
    br
-   button(onclick="client()") Client Module
-   script.
-      function client() {
-         window.location.href = '/client'
-      }
-   button(onclick = "farmer()") Farmer Module
-   script.
-      function farmer() {
-         window.location.href = '/farmer'
-      }
-   button(onclick = "center()") Distribution Center Module
-      script.
-         function center() {
-            window.location.href = '/center'
-         }
+
 
 
