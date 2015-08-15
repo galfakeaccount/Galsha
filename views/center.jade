@@ -5,23 +5,23 @@ block content
    br
    h2= 'Summery'
    case shippingDay
-      when 0: p Next shipping day is Monday
-      when 1: p Next shipping day is Thursday
+      when 0: p Next shipping day is <b>Monday</b>
+      when 1: p Next shipping day is <b>Thursday</b>
       default: p Next shipping day is unknown
-   p Orders for next shipping day: #{numberOfOrders}
+   p Orders for next shipping day: <b>#{numberOfOrders}</b>
    br
    button(onclick="checkStock()") Check Stock
    script.
       function checkStock() {
-         window.location.href = '/stock'
+         window.location.href = '/center/stock'
       }
    button(onclick = "orderStatus()") Order Status
    script.
       function orderStatus() {
-         window.location.href = '/ordersStatus'
+         window.location.href = '/center/orders'
       }
    button(onclick = "organise()") Organise Next Shipment Day
       script.
          function organise() {
-            window.location.href = '/organise'
+            window.location.href = '/center/organise'
          }

@@ -8,10 +8,29 @@ html
     link(rel='stylesheet', href='/stylesheets/bootstrap-responsive.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
   body
+    button(onclick = "home()") Home
+      script.
+        function home() {
+          window.location.href = '/'
+        }
+    button(onclick="client()") Client
+    script.
+      function client() {
+        window.location.href = '/client'
+      }
+    button(onclick = "farmer()") Farmer
+    script.
+      function farmer() {
+        window.location.href = '/farmer'
+      }
+    button(onclick = "center()") Distribution Center
+      script.
+        function center() {
+          window.location.href = '/center'
+        }
     block content
-      br
-      br
-      h4= 'Created as a final project for Cloud Computing, IDC, 2015'
+    br
+    h4= 'Created as a final project for Cloud Computing, IDC, 2015'
 
-          script(type='text/javascript' src='/js/bootstrap.min.js')
+      script(type='text/javascript' src='/js/bootstrap.min.js')
 
