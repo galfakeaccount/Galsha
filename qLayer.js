@@ -8,7 +8,7 @@ AWS.config.region = 'us-east-1'; //N. Virginia
 var dynamodb = new AWS.DynamoDB(); //New DynamoDB Instance
 var sqs = new AWS.SQS();
 var ordersQueueUri = 'https://sqs.us-east-1.amazonaws.com/016493201532/farmersDirectOrders';
-var d = new Date();
+var ordersCounter;
 
 function getDetails(req, callback) {
     console.log("In get name");
@@ -58,106 +58,150 @@ function getOrders(req, callback) { //Query all orders under specific phone numb
 function retrieveOrder(req, callback) { //Get a specific order
     console.log("In retrieve order");
     console.log(req);
-    var params = { //Params to be sent according to the structure of the table (In PDF file).
-        "TableName": "orderByID",
-        "KeyConditionExpression":  "orderID = :orderval",
-        "ExpressionAttributeValues": {
-            ":orderval": {"S": req}
+    if (req) {
+        var params = { //Params to be sent according to the structure of the table (In PDF file).
+            "TableName": "orderByID",
+            "KeyConditionExpression": "orderID = :orderval",
+            "ExpressionAttributeValues": {
+                ":orderval": {"S": req}
+            }
+
         }
 
+        dynamodb.query(params, function (err, data) {
+            if (err) {
+                console.log(err); // an error occurred
+            }
+            else {
+                console.log(data); // successful response
+                callback(data);
+            }
+        });
     }
-
-    dynamodb.query(params, function(err, data) {
-        if (err) {
-            console.log(err); // an error occurred
-        }
-        else {
-            console.log(data); // successful response
-            callback(data);
-        }
-    });
+    else{
+        callback('');
+    }
 }
 
-function sendOrder(req, callback){
+function sendOrder(req, callback) {
     console.log(req);
     console.log("In send order to DB");
-    // N: d.getDay()+d.getMonth()+d.getYear()
-    var params = {
-        Item: {
-            Phone: {
-                S: req.phone
-            },
-            deliveryDate: {
-                S: req.ddate
-            },
-            Center: {
-                S: req.pickuploc
-            },
-            Status: {
-                S: "OPEN"
-            },
-            orderID: {
-                S: "201508"+"050"
+    //Get counter from dynamoDB
+    var miniparams = {
+        TableName: 'sequenceOrder',
+        Key: {
+            "Counter": {
+                "S": "MAIN"
             }
-        },
-        TableName: "ordersDB"
-    };
-    dynamodb.putItem(params, function (error, data) {
+        }
+    }
+    dynamodb.getItem(miniparams, function (error, counter) {
         if (error) {
             console.log("Error: ", error, error.stack);
         } else {
-            //Add to orderByID
-            var tomatoGr = 0;
-            var appleGr = 0;
-            i = 0;
-            if(Object.prototype.toString.call( req.item ) === '[object Array]' ) { //There are multiple entries in order
-                req.item.forEach(function(entry) {
-                    if(entry == 'tomatoes'){
-                        tomatoGr = (tomatoGr*1 + req.amount[i]*1);
-                    }
-                    if (entry == 'apples'){
-                        appleGr = (appleGr*1 + req.amount[i]*1);
-                    }
-                    i++;
-                })
-            }
-            else{ //Only single value
-                if(req.item == 'tomatoes'){
-                    tomatoGr = req.amount;
-                }
-                if (req.item == 'apples'){
-                    appleGr = req.amount;
-                }
-            }
-            var paramsTwo = {
+            ordersCounter = counter.Item.SeqVal.N;
+            var params = {
                 Item: {
+                    Phone: {
+                        S: req.phone
+                    },
+                    deliveryDate: {
+                        S: req.ddate
+                    },
+                    Center: {
+                        S: req.pickuploc
+                    },
+                    Status: {
+                        S: "OPEN"
+                    },
                     orderID: {
-                        S: "201508"+"050"
-                    },
-                    supplyDate: {
-                        N: req.ddate
-                    },
-                    deliveryDay: {
-                        S: "M"
-                    },
-                    Apples: {
-                        N: ""+appleGr
-                    },
-                    Tomatoes: {
-                        N: ""+tomatoGr
+                        S: "" + ordersCounter
                     }
                 },
-                TableName: "orderByID"
+                TableName: "ordersDB"
             };
-            dynamodb.putItem(paramsTwo, function (error, data) {
+            dynamodb.putItem(params, function (error, data) {
                 if (error) {
                     console.log("Error: ", error, error.stack);
                 } else {
-                    callback();
+                    //Add to orderByID
+                    var tomatoGr = 0;
+                    var appleGr = 0;
+                    i = 0;
+                    if (Object.prototype.toString.call(req.item) === '[object Array]') { //There are multiple entries in order
+                        req.item.forEach(function (entry) {
+                            if (entry == 'tomatoes') {
+                                tomatoGr = (tomatoGr * 1 + req.amount[i] * 1);
+                            }
+                            if (entry == 'apples') {
+                                appleGr = (appleGr * 1 + req.amount[i] * 1);
+                            }
+                            i++;
+                        })
+                    }
+                    else { //Only single value
+                        if (req.item == 'tomatoes') {
+                            tomatoGr = req.amount;
+                        }
+                        if (req.item == 'apples') {
+                            appleGr = req.amount;
+                        }
+                    }
+                    var paramsTwo = {
+                        Item: {
+                            orderID: {
+                                S: "" + ordersCounter
+                            },
+                            supplyDate: {
+                                N: req.ddate
+                            },
+                            deliveryDay: {
+                                S: "M"
+                            },
+                            Apples: {
+                                N: "" + appleGr
+                            },
+                            Tomatoes: {
+                                N: "" + tomatoGr
+                            }
+                        },
+                        TableName: "orderByID"
+                    };
+                    ordersCounter++;
+                    dynamodb.putItem(paramsTwo, function (error, data) {
+                        if (error) {
+                            console.log("Error: ", error, error.stack);
+                        } else {
+                            var countParams = {
+                                TableName: 'sequenceOrder',
+                                Item: {
+                                    Counter: {
+                                        S: "MAIN"
+                                    },
+                                    SeqVal: {
+                                        N: ordersCounter.toString()
+                                    }
+                                }
+                            }
+                            dynamodb.putItem(countParams, function (error, data) {
+                                if (error) {
+                                    console.log("Error: ", error, error.stack);
+                                } else {
+                                    callback();
+                                }
+                                //Update counter and callback
+                            })
+                        }
+                    })
                 }
-            })}
-    });
+            })
+        }
+    })
 }
+
+    //Set new Counter
+
+
 function getResults(req, callback) {
     //console.log("Entered getResults");
     //console.log(req);

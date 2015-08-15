@@ -70,39 +70,50 @@ router.post('/placeorder', function(req, res) {
 });
 /* GET existing order page. */
 router.get('/existingorder', function(req, res) {
-  qLayer.getOrders(req.query.query, function (data) {
-    if (data.Count != 0) {//Results found
-      console.log('***'+data.Items[0].Center.S);
-      res.render('existingorder', {
-        title: 'Order History',
-        titleOfPage: 'This is your order history: ',
-        oHistory: data,
-        qTitle: '',
-        qResult: ''
-      })
-    }
-    else { //No results found
-      res.render('existingorder', {
-        title: 'Order History',
-        titleOfPage: 'No previous orders for this phone number',
-        oHistory: '',
-        qTitle: '',
-        qResult: ''
-      })
-    }
-  })
+  if (req.query.query != '') {
+    qLayer.getOrders(req.query.query, function (data) {
+      if (data.Count != 0) {//Results found
+        console.log('***' + data.Items[0].Center.S);
+        res.render('existingorder', {
+          title: 'Order History',
+          titleOfPage: 'This is your order history: ',
+          oHistory: data,
+          qTitle: '',
+          qResult: ''
+        })
+      }
+      else { //No results found
+        res.render('existingorder', {
+          title: 'Order History',
+          titleOfPage: 'No previous orders for this phone number',
+          oHistory: '',
+          qTitle: '',
+          qResult: ''
+        })
+      }
+    })
+  }
+  else {
+    res.render('client', {
+      title: 'Client side - Order managment',
+      titleOfPage: 'Place a new order or check existing one: ',
+      qTitle: 'Please enter valid phone ',
+      qResult: ''
+    });
+  }
 });
+
 
 /* GET specific order page. */
 router.get('/pullorder', function(req, res) {
   console.log(req);
   qLayer.retrieveOrder(req.query.orderID, function (data) {
-    if (data.Count != 0) {//Results found
+    if (data.Count != 0 && data != '') {//Results found
       console.log(data.Items[0].supplyDate.N);
       var fulldate = (data.Items[0].supplyDate.N);
-      var yr = fulldate.substring(0,5);
-      var month = fulldate.substring(5,7);
-      var day = fulldate.substring(8,9);
+      var yr = fulldate.substring(0,4);
+      var month = fulldate.substring(4,6);
+      var day = fulldate.substring(6,8);
       res.render('pullorder', {
         title: 'Order History',
         titleOfPage: 'Here are the details for order ' +req.query.orderID+ ':',

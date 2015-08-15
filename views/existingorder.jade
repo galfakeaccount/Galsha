@@ -4,31 +4,38 @@ block content
   h1= title
   p= titleOfPage
   br
-  table
-    tr
-      td
-        center
-          b Order ID
-      td
-        center
-          b Delivery Date
-      td
-        center
-          b Status
-    each val in oHistory.Items
+  if oHistory != ''
+    table
       tr
         td
-          center= val.orderID.S +'   '
+          center
+            b Order ID
         td
-          center= val.deliveryDate.S +'   '
+          center
+            b Delivery Date
         td
-          center= val.Status.S
-  br
-  form#searchBox(action='/client/pullorder')
-    h4= 'Check on specific order by orderID: '
-    input(type='text', name='orderID')
+          center
+            b Status
+      each val in oHistory.Items
+        tr
+          td
+            center= val.orderID.S +'   '
+          td
+            center= val.deliveryDate.S +'   '
+          td
+            center= val.Status.S
     br
-    button.btn(type='submit') Existing order
+    form#searchBox(action='/client/pullorder')
+      h4= 'Check on specific order by orderID: '
+      input(type='text', name='orderID')
+      br
+      button.btn(type='submit') Existing order
+  else
+    button(onclick='goBack()') Go Back
+    script.
+      function goBack() {
+        window.history.back();
+      }
   h3= qTitle
   h4= qResult
 
