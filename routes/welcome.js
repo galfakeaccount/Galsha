@@ -4,7 +4,7 @@
 //General Setting
 var express = require('express');
 var router = express.Router();
-var qLayer = require('../queryLayer');
+var qLayer = require('../qLayer');
 
 
 /* GET home page. */

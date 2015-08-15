@@ -7,12 +7,34 @@ AWS.config.loadFromPath('./awscred.json'); //Load the credentials from the JSON 
 AWS.config.region = 'us-east-1'; //N. Virginia
 var dynamodb = new AWS.DynamoDB(); //New DynamoDB Instance
 
+function getName(req, callback) {
+    console.log("In get name");
+    var params = { //Params to be sent according to the structure of the table (In PDF file).
+        "TableName": "ClientDB",
+        "KeyConditionExpression":  "Phone = :phoneval",
+        "ExpressionAttributeValues": {
+            ":phoneval": {"N": req}
+        }
+
+    }
+
+    dynamodb.query(params, function(err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data.Items[0].Name.S); // successful response
+            callback(data.Items[0].Name.S); //Return the name
+        }
+    });
+}
 function getResults(req, callback) {
     //console.log("Entered getResults");
     //console.log(req);
+    /*
     var reply ="";
     var params = { //Params to be sent according to the structure of the table (In PDF file).
-        "TableName": "EX2-TABLE",
+        "TableName": "OrdersDB",
         "KeyConditionExpression": "Word = :v_title",
         "IndexName" : "ranki", //Sort according to rank
         "ExpressionAttributeValues": {
@@ -36,6 +58,9 @@ function getResults(req, callback) {
             callback(reply.substring(0,reply.length - 5)); //Done, return reply content.
         }
     });
+    */
+    callback("Yes sir");
 }
 
 exports.getResults = getResults;
+exports.getName = getName;

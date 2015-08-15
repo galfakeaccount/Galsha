@@ -4,7 +4,7 @@
 //General Setting
 var express = require('express');
 var router = express.Router();
-
+var qLayer = require('../qLayer.js');
 /* GET Client page. */
 
 router.get('/', function(req, res) {
@@ -14,25 +14,19 @@ router.get('/', function(req, res) {
       qTitle: '',
       qResult: ''
     })});
-
 /* GET Client page. */
 
 router.get('/neworder', function(req, res) {
-  var url = require('url');
-  var url_parts = url.parse(req.url, true);
-  var query = url_parts.query;
-  var queryresult = "*";
-  query = JSON.stringify(query);
-  var n = query.indexOf(":");
-  query = query.substring(n+2, query.length-2);
+  console.log(req.query.query);
+  query = req.query.query;
   if (query.length != 0 && query != '{') { //There is a value in query
-    qLayer.getResults(query, function (queryresult) {
-      res.render('neworder', {
-        title: 'New Order',
-        qTitle: 'Hello Omer, Welcome back', // + queryLayer.getName(query), //Get the name that is assositated to the phone number from the client DB on DynamoDB
-        qResult: queryresult
+    qLayer.getName(query, function (name){
+        res.render('neworder', {
+          title: 'New Order',
+          qTitle: 'Hello '+name +', Welcome back', //Get the name that is assositated to the phone number from the client DB on DynamoDB
+          qResult: '' //Here store all the form for the order
+        });
       });
-    });
   }
   else{
     res.render('client', {

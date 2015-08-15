@@ -2,6 +2,7 @@ extends layout
 
 block content
   h1= title
+  h3= qTitle
   h3= titleOfPage
     form#searchBox(action='/client')
       br
@@ -17,7 +18,7 @@ block content
       br
       br
       input(type='submit', value='Existing order')
-    h3= qTitle
+
     h4= qResult
 
 
