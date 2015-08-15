@@ -1,0 +1,27 @@
+extends ../layout
+block content
+    h1= 'Get Orders'
+   div
+      legend Total Farmers Offering For This Week
+      table#dataTable(width='350px', border='4')
+         thead
+            tr#headtag
+               th Phone
+               th Status
+               th Order Week
+               th Order Day
+               th Items
+         tbody
+            each order in orders
+               tr(align='center')
+                  td= order.Phone
+                  td= order.status
+                  td= order.sWeek
+                  td= order.sDay
+                  td(white-space='pre')
+                     each item in order.Items
+                        p= item.type + ',' + item.quant
+                        br
+                        p= item.type
+      br
+      br
