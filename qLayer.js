@@ -87,13 +87,19 @@ function sendOrder(req, callback){
             Phone: {
                 S: req.phone
             },
-            Date: {
-                N: "15082016"
+            deliveryDate: {
+                S: "27082016"
+            },
+            Center: {
+                S: req.pickuploc
+            },
+            deliveryDay: {
+                S: req.dday
             },
             Status: {
                 S: "OPEN"
             },
-            OrderID: {
+            orderID: {
                 S: "201508"+"050"
             }
         },
@@ -131,7 +137,13 @@ function sendOrder(req, callback){
                     orderID: {
                         S: "201508"+"050"
                     },
-                    Apple: {
+                    supplyDate: {
+                        N: "17082015"
+                    },
+                    deliveryDay: {
+                        S: "M"
+                    },
+                    Apples: {
                         N: ""+appleGr
                     },
                     Tomatoes: {

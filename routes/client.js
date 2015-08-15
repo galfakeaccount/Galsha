@@ -21,6 +21,7 @@ router.get('/neworder', function(req, res) {
   query = req.query.query;
   if (query.length != 0 && query != '{') { //There is a value in query
     qLayer.getDetails(query, function (data){
+      console.log(data);
       if (data.Count != 0){
         res.render('neworder', {
           title: 'New Order',
