@@ -32,6 +32,51 @@ function getDetails(req, callback) {
     });
 }
 
+function getOrders(req, callback) { //Query all orders under specific phone number
+    console.log("In get orders");
+    var params = { //Params to be sent according to the structure of the table (In PDF file).
+        "TableName": "ordersDB",
+        "KeyConditionExpression":  "Phone = :phoneval",
+        "ExpressionAttributeValues": {
+            ":phoneval": {"S": req}
+        }
+
+    }
+
+    dynamodb.query(params, function(err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data); // successful response
+            callback(data);
+        }
+    });
+}
+
+function retrieveOrder(req, callback) { //Get a specific order
+    console.log("In retrieve order");
+    console.log(req);
+    var params = { //Params to be sent according to the structure of the table (In PDF file).
+        "TableName": "orderByID",
+        "KeyConditionExpression":  "orderID = :orderval",
+        "ExpressionAttributeValues": {
+            ":orderval": {"S": req}
+        }
+
+    }
+
+    dynamodb.query(params, function(err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data); // successful response
+            callback(data);
+        }
+    });
+}
+
 function sendSQS(req, callback){
     console.log("In SQS send order to queue");
     var params = {
@@ -146,3 +191,5 @@ function getResults(req, callback) {
 exports.getResults = getResults;
 exports.getDetails = getDetails;
 exports.sendSQS = sendSQS;
+exports.getOrders = getOrders;
+exports.retrieveOrder = retrieveOrder;

@@ -56,6 +56,8 @@ router.get('/neworder', function(req, res) {
 /* POST execute order page. */
 router.post('/placeorder', function(req, res) {
   console.log(req.body);
+  //Search for client on ClientDB - add it
+
   //Send order info to SQS to wait for pickup by the distribution center module
   qLayer.sendSQS(req.body, function (res) {
     res.render('orderDone', {
@@ -64,6 +66,55 @@ router.post('/placeorder', function(req, res) {
       qResult: ''
     });
   });
+});
+/* GET existing order page. */
+router.get('/existingorder', function(req, res) {
+  qLayer.getOrders(req.query.query, function (data) {
+    if (data.Count != 0) {//Results found
+      res.render('existingorder', {
+        title: 'Order History',
+        titleOfPage: 'This is your order history: ',
+        oHistory: data,
+        qTitle: '',
+        qResult: ''
+      })
+    }
+    else { //No results found
+      res.render('existingorder', {
+        title: 'Order History',
+        titleOfPage: 'No previous orders for this phone number',
+        oHistory: '',
+        qTitle: '',
+        qResult: ''
+      })
+    }
+  })
+});
+
+/* GET specific order page. */
+router.get('/pullorder', function(req, res) {
+  qLayer.retrieveOrder(req.query.orderID, function (data) {
+    if (data.Count != 0) {//Results found
+      res.render('existingorder', {
+        title: 'Order History',
+        titleOfPage: 'Here are the details for order ' +req.query.orderID+ ':',
+        oHistory: data,
+        oDate: '15/5/2015',
+        qTitle: '',
+        qResult: ''
+      })
+    }
+    else { //No results found
+      res.render('existingorder', {
+        title: 'Order History',
+        titleOfPage: 'No such order ID in our DB.',
+        oHistory: '',
+        oDate: '',
+        qTitle: '',
+        qResult: ''
+      })
+    }
+  })
 });
 
 module.exports = router;

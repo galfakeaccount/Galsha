@@ -1,0 +1,16 @@
+extends layout
+
+block content
+  h1= title
+  p= titleOfPage
+  br
+  p= 'Order date: ' +oDate
+  p= 'Details:'
+  p= 'Apples: '+oHistory.Items.Apple
+  p= 'Tomatoes: '+oHistory.Items.Tomatoes
+  p= JSON.stringify(oHistory)
+  br
+  h3= qTitle
+  h4= qResult
+
+
