@@ -8,29 +8,12 @@ var router = express.Router();
 /* GET Client page. */
 
 router.get('/', function(req, res) {
-  var url = require('url');
-  var url_parts = url.parse(req.url, true);
-  var query = url_parts.query;
-  var queryresult = "*";
-  query = JSON.stringify(query);
-  var n = query.indexOf(":");
-  query = query.substring(n+2, query.length-2);
-  if (query.length != 0 && query != '{') {
-    qLayer.getResults(query, function (queryresult) {
-      res.render('client', {
-        title: 'Client side - order managment',
-        qTitle: 'Results for key: ' + query,
-        qResult: queryresult
-      });
-    });
-  }
-  else{
-    res.render('client', {
+  res.render('client', {
       title: 'Client side - Order managment',
       titleOfPage: 'Place a new order or check existing one: ',
       qTitle: '',
       qResult: ''
-    })}});
+    })});
 
 /* GET Client page. */
 
@@ -42,11 +25,11 @@ router.get('/neworder', function(req, res) {
   query = JSON.stringify(query);
   var n = query.indexOf(":");
   query = query.substring(n+2, query.length-2);
-  if (query.length != 0 && query != '{') {
+  if (query.length != 0 && query != '{') { //There is a value in query
     qLayer.getResults(query, function (queryresult) {
-      res.render('client', {
-        title: 'Client side - order managment',
-        qTitle: 'Results for key: ' + query,
+      res.render('neworder', {
+        title: 'New Order',
+        qTitle: 'Hello Omer, Welcome back', // + queryLayer.getName(query), //Get the name that is assositated to the phone number from the client DB on DynamoDB
         qResult: queryresult
       });
     });
@@ -55,7 +38,7 @@ router.get('/neworder', function(req, res) {
     res.render('client', {
       title: 'Client side - Order managment',
       titleOfPage: 'Place a new order or check existing one: ',
-      qTitle: '',
+      qTitle: 'Please enter valid phone ',
       qResult: ''
     })}});
 

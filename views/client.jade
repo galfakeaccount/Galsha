@@ -3,19 +3,19 @@ extends layout
 block content
   h1= title
   h3= titleOfPage
-    form#searchBox(action='/neworder')
+    form#searchBox(action='/client/neworder')
       br
       h4= 'Place a new order:'
       input(type='text', name='query')
       br
       input(type='submit', value='New Order')
     br
-    form#searchBox(action='/existingorder')
+    form#searchBox(action='/client/existingorder')
       h4= 'Check up on exisitng order: '
       input(type='text', name='query')
       br
       input(type='submit', value='Existing order')
-    h3= qTitle
+    h3(style={color: 'red'})= qTitle
     h4= qResult
 
 
