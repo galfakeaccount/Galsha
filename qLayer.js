@@ -216,6 +216,35 @@ function getQuota(callback){
         }
     })
 }
+
+function updateQuota(req, callback){
+    console.log("In update quota");
+    console.log(req);
+    var params = {
+        TableName: 'farmersQuota',
+        Item: {
+            farmerName: {
+                S: req.fName
+            },
+            offeredGoods: {
+                S: req.itemToUpdate
+            },
+            Capacity: {
+                N: req.newQuota
+            }
+        }
+    }
+    dynamodb.putItem(params, function (err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data); // successful response
+            callback();
+        }
+    })
+}
+
 function getResults(req, callback) {
     //console.log("Entered getResults");
     //console.log(req);
@@ -256,3 +285,4 @@ exports.sendOrder = sendOrder;
 exports.getOrders = getOrders;
 exports.retrieveOrder = retrieveOrder;
 exports.getQuota = getQuota;
+exports.updateQuota = updateQuota;

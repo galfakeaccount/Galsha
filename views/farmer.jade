@@ -37,7 +37,22 @@ block content
               center= val.Capacity.N
     else
       h4= qResult
-
+    br
+    h4= 'Update your quota:'
+    br
+    form#searchBox(action='/farmer/updateQuota')
+      h5= 'Farmer\'s name: '
+      input(type='text', name='fName')
+      h5= 'Item\'s name: '
+      select(name='itemToUpdate')
+        option(value='Apples') Apples
+        option(value='Tomatoes') Tomatoes
+      br
+      h5= 'New quota: '
+      input(type='text', name='newQuota')
+      br
+      button.btn(type='submit') Update
+    br
   if resultValues == 'Completed'
     if qResult == '[object Object]'
       table

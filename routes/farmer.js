@@ -45,6 +45,18 @@ router.get('/', function(req, res) {
   }
 });
 
+/* GET Update Quota page. */
+router.get('/updateQuota', function(req, res) {
+    qLayer.updateQuota(req.query, function (data) {
+      console.log(data);
+      res.render('farmer', {
+          infoTitle: 'Quota has been updated.',
+          resultValues: '',
+          qResult: ''
+        });
+    })
+  });
+
 
 
 module.exports = router;
