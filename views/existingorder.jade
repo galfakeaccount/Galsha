@@ -4,12 +4,13 @@ block content
   h1= title
   p= titleOfPage
   br
-  p= 'Order date: ' +oDate
-  p= 'Details:'
-  p= 'Apples: '+oHistory.Items.Apple
-  p= 'Tomatoes: '+oHistory.Items.Tomatoes
   p= JSON.stringify(oHistory)
   br
+  form#searchBox(action='/client/pullorder')
+    h4= 'Check on specific order by orderID: '
+    input(type='text', name='orderID')
+    br
+    button.btn(type='submit') Existing order
   h3= qTitle
   h4= qResult
 

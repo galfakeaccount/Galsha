@@ -4,9 +4,17 @@ block content
   h1= title
   p= titleOfPage
   br
-  p= JSON.stringify(oHistory)
+  p= 'Order date: ' + oDate
+  h4= 'Details:'
+  p= 'Apples: ' + oApples +' grams.'
+  p= 'Tomatoes: ' + oTomatoes +' grams.'
   br
   h3= qTitle
   h4= qResult
+  button(onclick='goBack()') Go Back
+    script.
+      function goBack() {
+        window.history.back();
+      }
 
 

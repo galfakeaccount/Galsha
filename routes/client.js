@@ -58,8 +58,8 @@ router.post('/placeorder', function(req, res) {
   console.log(req.body);
   //Search for client on ClientDB - add it
 
-  //Send order info to SQS to wait for pickup by the distribution center module
-  qLayer.sendSQS(req.body, function (res) {
+  //Send order info to dynamoDB
+  qLayer.sendOrder(req.body, function (res) {
     res.render('orderDone', {
       title: 'Thank you ' +res + ', your order has been placed.',
       qTitle: '',
@@ -93,22 +93,28 @@ router.get('/existingorder', function(req, res) {
 
 /* GET specific order page. */
 router.get('/pullorder', function(req, res) {
+  console.log(req);
   qLayer.retrieveOrder(req.query.orderID, function (data) {
     if (data.Count != 0) {//Results found
-      res.render('existingorder', {
+      var yr = req.query.orderID.substring(0,4);
+      var month = req.query.orderID.substring(5,6);
+      res.render('pullorder', {
         title: 'Order History',
         titleOfPage: 'Here are the details for order ' +req.query.orderID+ ':',
-        oHistory: data,
-        oDate: '15/5/2015',
+        oApples: data.Items[0].Apple.N,
+        oTomatoes: data.Items[0].Tomatoes.N,
+        oDate: ''+month+'/'+yr,
         qTitle: '',
         qResult: ''
       })
     }
     else { //No results found
-      res.render('existingorder', {
+      res.render('pullorder', {
         title: 'Order History',
         titleOfPage: 'No such order ID in our DB.',
         oHistory: '',
+        oApples: 'NA',
+        oTomatoes: 'NA',
         oDate: '',
         qTitle: '',
         qResult: ''
