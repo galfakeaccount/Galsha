@@ -72,6 +72,7 @@ router.post('/placeorder', function(req, res) {
 router.get('/existingorder', function(req, res) {
   qLayer.getOrders(req.query.query, function (data) {
     if (data.Count != 0) {//Results found
+      console.log('***'+data.Items[0].Center.S);
       res.render('existingorder', {
         title: 'Order History',
         titleOfPage: 'This is your order history: ',
@@ -99,9 +100,9 @@ router.get('/pullorder', function(req, res) {
     if (data.Count != 0) {//Results found
       console.log(data.Items[0].supplyDate.N);
       var fulldate = (data.Items[0].supplyDate.N);
-      var yr = fulldate.substring(4,8);
-      var month = fulldate.substring(2,4);
-      var day = fulldate.substring(0,2);
+      var yr = fulldate.substring(0,5);
+      var month = fulldate.substring(5,7);
+      var day = fulldate.substring(8,9);
       res.render('pullorder', {
         title: 'Order History',
         titleOfPage: 'Here are the details for order ' +req.query.orderID+ ':',

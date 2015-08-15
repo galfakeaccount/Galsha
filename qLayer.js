@@ -135,7 +135,7 @@ function sendOrder(req, callback){
                         S: "201508"+"050"
                     },
                     supplyDate: {
-                        N: "17082015"
+                        N: req.ddate
                     },
                     deliveryDay: {
                         S: "M"

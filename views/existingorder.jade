@@ -4,7 +4,25 @@ block content
   h1= title
   p= titleOfPage
   br
-  p= JSON.stringify(oHistory)
+  table
+    tr
+      td
+        center
+          b Order ID
+      td
+        center
+          b Delivery Date
+      td
+        center
+          b Status
+    each val in oHistory.Items
+      tr
+        td
+          center= val.orderID.S +'   '
+        td
+          center= val.deliveryDate.S +'   '
+        td
+          center= val.Status.S
   br
   form#searchBox(action='/client/pullorder')
     h4= 'Check on specific order by orderID: '
