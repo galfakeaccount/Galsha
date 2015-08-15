@@ -1,51 +1,34 @@
 extends ../layout
 block content
    h1= 'Stock Summery'
-   h4 Total Farmers Offering For This Week
-   p
-   table
-      thead
-         tr#headtag
-            th |
-            th Item
-            th |
-            th In stock (KG)
-            th |
-            th Ordered (KG)
-            th |
-      tbody
-         each item in totalOffering
-            tr
-               td |
-               td= item.Name
-               td |
-               td= item.InStock
-               td |
-               td= item.Ordered
-               td |
-   br
-   br
-
-   h4 Offering per farmer for this week
-   p
-      table
+   div
+      legend Total Farmers Offering For This Week
+      table#dataTable(width='350px', border='4')
          thead
             tr#headtag
-               th |
                th Item
-               th |
+               th In stock (KG)
+               th Ordered (KG)
+         tbody
+            each item in totalOffering
+               tr(align='center')
+                  td= item.Name
+                  td= item.InStock
+                  td= item.Ordered
+      br
+      br
+
+      legend Offering per farmer for this week
+      table#dataTable(width='350px', border='4')
+         thead
+            tr#headtag
+               th Item
                th Farmer Name
-               th |
                th Offering (KG)
-               th |
          tbody
             each offer in farmerOffering
-               tr
-                  td |
+               tr(align='center')
                   td= offer.Name
-                  td |
                   td= offer.Farmer
-                  td |
                   td= offer.stock
-                  td |
 

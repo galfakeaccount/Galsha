@@ -88,12 +88,12 @@ block content
                 legend What would you like to order?
                 input(type='button', value='Add Row', onclick="addRow('dataTable')")
                 input(type='button', value='Delete Selection', onclick="deleteRow('dataTable')")
-                table#dataTable(width='350px', border='1')
+                table#dataTable(width='350px', border='4')
                     tr
                         th Select
                         th Item Description
                         th Enter wanted amount in grams
-                    td
+                    td(align='center')
                         input(type='checkbox', name='chk')
                     td
                         select(name='item')

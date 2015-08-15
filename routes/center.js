@@ -29,6 +29,11 @@ router.get('/organise', function(req, res) {
     res.render('centerModel/organise', {});
 });
 
+router.post('/orders', function(req, res) {
+
+    res.render('centerModel/organise', {});
+});
+
 /*
  * Get current stock by farmer and item
  * Name - The name of the item.
