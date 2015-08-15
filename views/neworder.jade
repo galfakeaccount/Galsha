@@ -1,110 +1,108 @@
 extends layout
 
 block content
-  h1= title
-  h3= qTitle
+    h1= title
+    h3= qTitle
 
-  script(language='javascript').
-    function addRow(tableID) {
-      var table = document.getElementById(tableID);
-      var rowCount = table.rows.length;
-      var row = table.insertRow(rowCount);
-      var colCount = table.rows[0].cells.length;
-      for(var i=0; i<colCount; i++) {
-        var newcell = row.insertCell(i);
-        newcell.innerHTML = table.rows[1].cells[i].innerHTML;
-        //alert(newcell.childNodes);
-        switch(newcell.childNodes[0].type) {
-          case "text":
-            newcell.childNodes[0].value = "";
-            break;
-          case "checkbox":
-            newcell.childNodes[0].checked = false;
-            break;
-          case "select-one":
-            newcell.childNodes[0].selectedIndex = 0;
-            break;
-        }
-      }
-    }
-    function deleteRow(tableID) {
-      try {
-        var table = document.getElementById(tableID);
-        var rowCount = table.rows.length;
-        for(var i=0; i<rowCount; i++) {
-          var row = table.rows[i];
-          var chkbox = row.cells[0].childNodes[0];
-          if(null != chkbox && true == chkbox.checked) {
-            if(rowCount <= 1) {
-              alert("Cannot delete all the rows.");
-              break;
+    script(language='javascript').
+        function addRow(tableID) {
+            var table = document.getElementById(tableID);
+            var rowCount = table.rows.length;
+            var row = table.insertRow(rowCount);
+            var colCount = table.rows[0].cells.length;
+            for (var i = 0; i < colCount; i++) {
+                var newcell = row.insertCell(i);
+                newcell.innerHTML = table.rows[1].cells[i].innerHTML;
+                //alert(newcell.childNodes);
+                switch (newcell.childNodes[0].type) {
+                    case "text":
+                        newcell.childNodes[0].value = "";
+                        break;
+                    case "checkbox":
+                        newcell.childNodes[0].checked = false;
+                        break;
+                    case "select-one":
+                        newcell.childNodes[0].selectedIndex = 0;
+                        break;
+                }
             }
-            table.deleteRow(i);
-            rowCount--;
-            i--;
-          }
         }
-      }catch(e) {
-        alert(e);
-      }
-    }
-  body
-    form(action='/client/placeorder', method= 'post')
-      fieldset#pdetails
-        legend Personal information:
-        | First name:
-        br
-        input(type='text', name='firstname', value='Omer')
-        br
-        | Last name:
-        br
-        input(type='text', name='lastname', value='Keshet')
-        br
-        | Address:
-        br
-        input(type='text', name='address')
-        br
-      fieldset#sdetails
-        legend Shipment information:
-        | Please choose the your preferred shipment day:
-        br
-        input(type='radio', name='dday', value='monday', checked='')
-        | Monday
-        br
-        input(type='radio', name='dday', value='thursday')
-        | Thursday
-        br
-        br
-        p
-          | ** All orders placed are dispatched in the next shipment day, for example - order on Tuesday for monday - you will receive your order on Monday, the following week. Order on Sunday for monday, you will recieve your order on Monday, the day after.
-        br
-        | Choose your preferred pick-up center:
-        br
-        select(name='pickuploc')
-          option(value='google') Google Offices
-          option(value='intel') Intel Haifa
-          option(value='microsoft') Microsoft Hertzeliya
-      fieldset#orderdetails
-        legend What would you like to order?
-        input(type='button', value='Add Row', onclick="addRow('dataTable')")
-        input(type='button', value='Delete Selection', onclick="deleteRow('dataTable')")
-        table#dataTable(width='350px', border='1')
-          tr
-            th Select
-            th Item Description
-            th Enter wanted amount in grams
-          td
-            input(type='checkbox', name='chk')
-          td
-            select(name='item')
-              option(value='apples') Apples
-              option(value='tomatoes') Tomatoes
-          td
-            input(type='text', name='amount')
-      input(type='submit', value='Submit')
+        function deleteRow(tableID) {
+            try {
+                var table = document.getElementById(tableID);
+                var rowCount = table.rows.length;
+                for (var i = 0; i < rowCount; i++) {
+                    var row = table.rows[i];
+                    var chkbox = row.cells[0].childNodes[0];
+                    if (null != chkbox && true == chkbox.checked) {
+                        if (rowCount <= 1) {
+                            alert("Cannot delete all the rows.");
+                            break;
+                        }
+                        table.deleteRow(i);
+                        rowCount--;
+                        i--;
+                    }
+                }
+            } catch (e) {
+                alert(e);
+            }
+        }
+    body
+        form(action='/client/placeorder', method= 'post')
+            fieldset#pdetails
+                legend Personal information:
+                | First name:
+                br
+                input(type='text', name='firstname', value='Omer')
+                br
+                | Last name:
+                br
+                input(type='text', name='lastname', value='Keshet')
+                br
+                | Address:
+                br
+                input(type='text', name='address')
+                br
+            fieldset#sdetails
+                legend Shipment information:
+                | Please choose the your preferred shipment day:
+                br
+                input(type='radio', name='dday', value='monday', checked='')
+                | Monday
+                br
+                input(type='radio', name='dday', value='thursday')
+                | Thursday
+                br
+                br
+                p
+                    | ** All orders placed are dispatched in the next shipment day, for example - order on Tuesday for monday - you will receive your order on Monday, the following week. Order on Sunday for monday, you will recieve your order on Monday, the day after.
+                br
+                | Choose your preferred pick-up center:
+                br
+                select(name='pickuploc')
+                    option(value='google') Google Offices
+                    option(value='intel') Intel Haifa
+                    option(value='microsoft') Microsoft Hertzeliya
+            fieldset#orderdetails
+                legend What would you like to order?
+                input(type='button', value='Add Row', onclick="addRow('dataTable')")
+                input(type='button', value='Delete Selection', onclick="deleteRow('dataTable')")
+                table#dataTable(width='350px', border='1')
+                    tr
+                        th Select
+                        th Item Description
+                        th Enter wanted amount in grams
+                    td
+                        input(type='checkbox', name='chk')
+                    td
+                        select(name='item')
+                            option(value='apples') Apples
+                            option(value='tomatoes') Tomatoes
+                    td
+                        input(type='text', name='amount')
+                button.btn(type='submit') Submit
 
-
-
-  h4= qResult
+    h4= qResult
 
 

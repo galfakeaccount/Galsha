@@ -2,32 +2,39 @@ extends ../layout
 block content
    h1= 'Get Orders'
    div
-      form(action='/orders',method='post')
-         div#shipment_day(data-role='fieldcontain')
-            fieldset(data-role='controlgroup')
-               h4 Choose Shipping day:
-               select(name='shipping_day')
-                  option(value='0') Monday
-                  option(value='1') Thersday
-                  option(value='2') Both
-         div#dist_centers(data-role='fieldcontain')
-            fieldset(data-role='controlgroup' name=centers)
-               h4 Choose Distribution Centers:
-               label.checkbox.inline
-                  input#inlineCheckbox1(type='checkbox',value='tlv1')
-                  | TLV1
-               label.checkbox.inline
-                  input#inlineCheckbox2(type='checkbox',value='tlv2')
-                  | TLV2
-               label.checkbox.inline
-                  input#inlineCheckbox3(type='checkbox',value='haifa1')
-                  | Haifa1
-               label.checkbox.inline
-                  input#inlineCheckbox3(type='checkbox',value='jerusalem')
-                  | Jerusalem
-               label.checkbox.inline
-                  input#inlineCheckbox3(type='checkbox',value='bash')
-                  | Beer Sheva
-         div(data-role='fieldcontain')
+      form(action='/orders', method='POST')
+         fieldset#shipping_day
+            legend Choose Shipping day:
+            select(name='shipping_day')
+               option(value='0') Monday
+               option(value='1') Thursday
+               option(value='2') Both
+         br
+         fieldset#dist_centers
+            legend Choose Distribution Centers:
+            label.checkbox.inline
+               input#dist_centers1(type='checkbox', name='dist_centers', value='tlv1')
+               | TLV1
+            label.checkbox.inline
+               input#dist_centers2(type='checkbox', name='dist_centers', value='tlv2')
+               | TLV2
+            label.checkbox.inline
+               input#dist_centers3(type='checkbox', name='dist_centers', value='goog')
+               | Google Offices
+            label.checkbox.inline
+               input#dist_centers4(type='checkbox', name='dist_centers', value='int_haifa')
+               | Intel Haifa
+            label.checkbox.inline
+               input#dist_centers5(type='checkbox', name='dist_centers', value='microsoft_hertz')
+               | Microsoft Hertzeliya
+         br
+         br
+         fieldset#orderdetails
+            legend
             button.btn(type='submit') Get Orders
+            button.btn(onclick = "allOrders()") Get All Orders
+               script.
+                  function allOrders() {
+                     window.location.href = '/allOrders'
+                  }
 

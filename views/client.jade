@@ -8,14 +8,14 @@ block content
       h4= 'Place a new order:'
       input(type='text', name='query')
       br
-      input(type='submit', value='New Order')
+      button.btn(type='submit') New Order
     br
     form#searchBox(action='/client/existingorder')
       h4= 'Check up on exisitng order: '
       input(type='text', name='query')
       br
-      input(type='submit', value='Existing order')
-    h3(style={color: 'red'})= qTitle
+      button.btn(type='submit') Existing order
+  h3(style={color: 'red'})= qTitle
     h4= qResult
 
 
