@@ -54,15 +54,19 @@ block content
         legend Personal information:
         | First name:
         br
-        input(type='text', name='firstname', value='Omer')
+        input(type='text', name='firstname', value=fName)
         br
         | Last name:
         br
-        input(type='text', name='lastname', value='Keshet')
+        input(type='text', name='lastname', value=sName)
+        br
+        | Phone:
+        br
+        input(type='text', name='lastname', value=phoneN)
         br
         | Address:
         br
-        input(type='text', name='address')
+        input(type='text', name='address', value=storedAddress)
         br
       fieldset#sdetails
         legend Shipment information:

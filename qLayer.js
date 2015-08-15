@@ -6,6 +6,8 @@ var AWS = require('aws-sdk');
 AWS.config.loadFromPath('./awscred.json'); //Load the credentials from the JSON file
 AWS.config.region = 'us-east-1'; //N. Virginia
 var dynamodb = new AWS.DynamoDB(); //New DynamoDB Instance
+var sqs = new AWS.SQS();
+var ordersQueueUri = 'https://sqs.us-east-1.amazonaws.com/016493201532/farmersDirectOrders';
 
 function getDetails(req, callback) {
     console.log("In get name");
@@ -24,8 +26,87 @@ function getDetails(req, callback) {
         }
         else {
             console.log(data.Items[0]); // successful response
-            callback(data.Items[0].FirstName.S +" "+data.Items[0].Surname.S); //Return the name
+            callback(data);
+            //callback(data.Items[0].FirstName.S +" "+data.Items[0].Surname.S); //Return the name
         }
+    });
+}
+
+function sendSQS(req, callback){
+    console.log("In SQS send order to queue");
+    var params = {
+        MessageBody: "New order from " + req.FirstName +' '+req.Surname,
+        QueueUrl: ordersQueueUri,
+        DelaySeconds: 0,
+        MessageAttributes: { //This are the actual order information
+            Phone: {
+                DataType: 'STRING_VALUE', /* required */
+                BinaryListValues: [
+                    "0547263799",
+                ]
+            },
+            Apples: {
+                DataType: 'STRING_VALUE', /* required */
+                BinaryListValues: [
+                    new Buffer('...') || 'STRING_VALUE',
+                    /* more items */
+                ],
+                BinaryValue: new Buffer('...') || 'STRING_VALUE',
+                StringListValues: [
+                    'STRING_VALUE',
+                    /* more items */
+                ],
+                StringValue: 'STRING_VALUE'
+            },
+            Tomatoes: {
+                DataType: 'STRING_VALUE', /* required */
+                BinaryListValues: [
+                    new Buffer('...') || 'STRING_VALUE',
+                    /* more items */
+                ],
+                BinaryValue: new Buffer('...') || 'STRING_VALUE',
+                StringListValues: [
+                    'STRING_VALUE',
+                    /* more items */
+                ],
+                StringValue: 'STRING_VALUE'
+            },
+            Date: {
+                DataType: 'STRING_VALUE', /* required */
+                BinaryListValues: [
+                    new Buffer('...') || 'STRING_VALUE',
+                    /* more items */
+                ],
+                BinaryValue: new Buffer('...') || 'STRING_VALUE',
+                StringListValues: [
+                    'STRING_VALUE',
+                    /* more items */
+                ],
+                StringValue: 'STRING_VALUE'
+            },
+            Day: {
+                DataType: 'STRING_VALUE', /* required */
+                BinaryListValues: [
+                    new Buffer('...') || 'STRING_VALUE',
+                    /* more items */
+                ],
+                BinaryValue: new Buffer('...') || 'STRING_VALUE',
+                StringListValues: [
+                    'STRING_VALUE',
+                    /* more items */
+                ],
+                StringValue: 'STRING_VALUE'
+            }
+        }
+    };
+    sqs.sendMessage(params, function (err, data) {
+        if (err) {
+            console.log("Error: ", err);
+        } // an error occurred
+        else {
+            console.log('Victory, message sent for ' + encodeURIComponent(request.params.name) + '!');
+            callback(req.FirstName +' '+req.Surname);
+        };
     });
 }
 function getResults(req, callback) {
@@ -64,3 +145,4 @@ function getResults(req, callback) {
 
 exports.getResults = getResults;
 exports.getDetails = getDetails;
+exports.sendSQS = sendSQS;
