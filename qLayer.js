@@ -53,15 +53,51 @@ function addDetails(req, callback) {
     }
 
     dynamodb.putItem(params, function(err, data) {
-        if (err) {
-            console.log(err); // an error occurred
-        }
+		if (err) {
+				console.log(err); // an error occurred
+			}
+			else {
+				 callback();
+				//callback(data.Items[0].FirstName.S +" "+data.Items[0].Surname.S); //Return the name
+			}
+		});
+	}
+
+function getAllOrders(callback) { //Query all orders in the system
+    var params = { //Params to be sent according to the structure of the table (In PDF file).
+        "TableName": "ordersDB",
+        "AttributesToGet":["Phone", "deliveryDate", "Status", "orderID", "Center"]
+    }
+
+    dynamodb.scan(params, function(err, data) {
+        if (err) console.log(err, err.stack); // an error occurred
         else {
-            callback();
-            //callback(data.Items[0].FirstName.S +" "+data.Items[0].Surname.S); //Return the name
+            callback(data);// successful response
         }
     });
 }
+
+function getOpenOrders(callback) { //Query all open orders
+    var params = { //Params to be sent according to the structure of the table (In PDF file).
+        "TableName": "ordersDB",
+        "ProjectionExpression": 'deliveryDate, orderStatus, orderID, Center',
+        "FilterExpression": "orderStatus = :openStatus",
+        "ExpressionAttributeValues": {
+            ":openStatus": {"S": "OPEN"}
+        }
+    }
+
+    dynamodb.scan(params, function(err, data) {
+		if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data); // successful response
+            callback(data);
+        }
+    });
+}
+
 function getOrders(req, callback) { //Query all orders under specific phone number
     //console.log("In get orders");
     var params = { //Params to be sent according to the structure of the table (In PDF file).
@@ -314,3 +350,5 @@ exports.retrieveOrder = retrieveOrder;
 exports.getQuota = getQuota;
 exports.updateQuota = updateQuota;
 exports.addDetails = addDetails;
+exports.getAllOrders = getAllOrders;
+exports.getOpenOrders = getOpenOrders;

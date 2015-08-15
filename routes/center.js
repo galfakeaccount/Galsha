@@ -4,6 +4,8 @@
 //General Setting
 var express = require('express');
 var router = express.Router();
+var qLayer = require('../qLayer.js');
+
 
 // middleware specific to this router
 router.use(function timeLog(req, res, next) {
@@ -26,13 +28,57 @@ router.get('/orders', function(req, res) {
 });
 
 router.get('/organise', function(req, res) {
-    res.render('centerModel/organise', {});
+    // 1. get all open orders
+    qLayer.getOpenOrders(function(data){
+        console.log("In organize");
+        console.log(data.Items);
+        var centers = {};
+        data.Items.forEach(function(entry, index) {
+            // get order info by orderID
+            qLayer.retrieveOrder(entry.orderID.S, function(orderInfo){
+                console.log(orderInfo.Items);
+                if (centers[entry.Center.S]){
+                    centers[entry.Center.S].apples += orderInfo.Items.apples;
+                    centers[entry.Center.S].tomatoes += orderInfo.Items.tomatoes;
+                } else {
+                    centers[entry.Center.S] =
+                    {apples: orderInfo.Items.apples, tomatoes : orderInfo.Items.tomatoes, farmer: ""};
+                }
+                console.log("centers:", centers);
+            });
+        });
+
+    });
+    // 2. devide orders by centers
+    // 3. for each center:
+    //   a. query each orderId
+    //   b. sum appels, and sum tomatoes - enter into new table
+
+    res.render('centerModel/organise',
+        {data: [{name: 'google', deliveryDate: '29082015', apples: '230', tomatoes: '120'},
+            {name: 'microsoft', deliveryDate: '29082015', apples: '20', tomatoes: '80'}]
+            , farmers: ['Ali', 'Jack', 'Danny']});
 });
+
+
+
 
 router.post('/orders', function(req, res) {
-
-    res.render('centerModel/organise', {});
+    if (req.body.get_all_orders) {
+        qLayer.getAllOrders(function(data){
+            res.render('centerModel/showOrders', {data: data.Items});
+        });
+    } else {
+        console.log("Something alse");
+        qLayer.getAllOrders(function(data){
+            res.render('centerModel/showOrders', {data: data.Items});
+        });
+    }
 });
+
+router.post('/organise', function(req, res){
+    console.log(req.body);
+})
 
 /*
  * Get current stock by farmer and item
@@ -42,9 +88,9 @@ router.post('/orders', function(req, res) {
  */
 function getStock(){
     var items = [
-        {"Name":"bananas", "Farmer": "Gal", "stock":3},
-        {"Name":"tomatos", "Farmer": "Gal", "stock":12},
-        {"Name":"tomatos", "Farmer": "Omer", "stock":4}
+        {"Name":"appals", "Farmer": "Gal", "stock":3},
+        {"Name":"tomatoes", "Farmer": "Gal", "stock":12},
+        {"Name":"tomatoes", "Farmer": "Omer", "stock":4}
     ];
     return items;
 }
