@@ -15,6 +15,7 @@
     "aws-sdk": "~2.1.25",
     "serve-favicon": "~2.2.0",
     "line-by-line": "*",
-    "validator": "*"
+    "validator": "*",
+    "moment": "*"
   }
 }

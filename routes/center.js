@@ -5,12 +5,9 @@
 var express = require('express');
 var router = express.Router();
 var qLayer = require('../qLayer.js');
-
-// middleware specific to this router
-router.use(function timeLog(req, res, next) {
-    console.log('Time: ', Date.now());
-    next();
-});
+var moments = require('moment');
+var todayDate = moments().format('YYYYMMDD'); //Will hold today's date
+var entires = [];
 
 router.get('/', function(req, res, next) {
     res.render('centerModel/center', {"shippingDay": 0, "numberOfOrders": 230});
@@ -34,23 +31,38 @@ router.get('/orders', function(req, res) {
 });
 
 router.get('/organise', function(req, res) {
-    // 1. get all open orders
-    qLayer.getOpenOrders(function(orders) {
-        qLayer.getCenters(orders, qLayer.updateCenters);
+    //Get all open orders
+    qLayer.getOpenOrders(function(data){
+        console.log(data);
+        //Interate over data and add to some variable, add only relavent for today and onwards
+        data.Items.forEach(function(entry){
+            //console.log("Entry: "+entry.deliveryDate.S);
+            //console.log("Today: "+todayDate);
+            if (entry.deliveryDate.S >=todayDate) {
+                //console.log("Still valid");
+                //addEntry(entry);
+            }
+        });
 
-    });
-    // 2. devide orders by centers
-    // 3. for each center:
-    //   a. query each orderId
-    //   b. sum appels, and sum tomatoes - enter into new table
+        //Sum for each center and date the total number of items and add to new totalCentersTable
 
+        //Display it
+    })
     res.render('centerModel/organise',
         {data: [{name: 'google', deliveryDate: '29082015', apples: '230', tomatoes: '120'},
             {name: 'microsoft', deliveryDate: '29082015', apples: '20', tomatoes: '80'}]
-            , farmers: ['Ali', 'Jack', 'Danny']});
+            , farmers: ['John', 'Jack', 'Sam']});
 });
 
-
+router.post('/chooseFarmers', function(req, res) {
+    console.log(req.body);
+    //Get all open orders
+    qLayer.updateFarmerDB(function(data){
+        console.log(data);
+        //Interate over data and add to some variable, add only relavent for today and onwards
+        res.render('centerModel/chooseFarmer');
+    });
+});
 
 
 router.post('/orders', function(req, res) {

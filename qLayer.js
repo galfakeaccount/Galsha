@@ -66,12 +66,11 @@ function addDetails(req, callback) {
 		});
 	}
 
-function getAllOrders(callback) { //Query all orders in the system
+//Scan for all open orders on ordersDB
+function getAllOrders(callback) { //Query allorders in the system
     var params = { //Params to be sent according to the structure of the table (In PDF file).
-        "TableName": "ordersDB",
-        "AttributesToGet":["Phone", "deliveryDate", "Status", "orderID", "Center"]
-    }
-
+        "TableName": "ordersDB"
+        }
     dynamodb.scan(params, function(err, data) {
         if (err) console.log(err, err.stack); // an error occurred
         else {
@@ -83,7 +82,6 @@ function getAllOrders(callback) { //Query all orders in the system
 function getOpenOrders(callback) { //Query all open orders
     var params = { //Params to be sent according to the structure of the table (In PDF file).
         "TableName": "ordersDB",
-        "ProjectionExpression": 'deliveryDate, orderStatus, orderID, Center',
         "FilterExpression": "orderStatus = :openStatus",
         "ExpressionAttributeValues": {
             ":openStatus": {"S": "OPEN"}
@@ -91,11 +89,9 @@ function getOpenOrders(callback) { //Query all open orders
     }
 
     dynamodb.scan(params, function(err, data) {
-		if (err) {
-            console.log(err); // an error occurred
-        }
+        if (err) console.log(err, err.stack); // an error occurred
         else {
-            callback(data.Items); // successful response
+            callback(data);// successful response
         }
     });
 }
@@ -122,14 +118,16 @@ function getCenters(orders, callback) {
     });
 }
 
-function updateCenters(centers, callback){
-    count = centers.length;
+function updateCenters(callback){
+    count = DISTRIBUTION_CENTERS.length;
     DISTRIBUTION_CENTERS.forEach(function(centerName) {
-        sumCenter(centerName, centers[centerName]);
-        count--;
-        if (count == 0){
-            callback(); // Will get the data from the server
-        }
+        sumCenter(centerName, function(centers){
+            count--;
+            if (count == 0){
+                console.log("Finished");
+                callback(centers); // Will get the data from the server
+            }
+        });
     });
 }
 
@@ -137,6 +135,7 @@ function sumCenter(centerName, centerOrders){
     var count = centerOrders.length;
     var apples = 0;
     var tomatoes = 0;
+    console.log('***'+centerOrders);
     async.forEach(centerOrders, function(order) {
         // get order info by orderID
         //console.log(order);
@@ -188,7 +187,6 @@ function getOrders(req, callback) { //Query all orders under specific phone numb
             ":phoneval": {"S": req}
         }
     }
-
     dynamodb.query(params, function(err, data) {
         if (err) {
             console.log(err); // an error occurred
@@ -386,7 +384,39 @@ function updateQuota(req, callback){
         }
     })
 }
-
+function updateFarmerDB(req, callback){
+    console.log("In update farmers");
+    console.log(req);
+    var params = {
+        TableName: 'ordersTotalKg',
+        Item: {
+            Farmer: {
+                S: req.fName
+            },
+            deliveryDate: {
+                S: req.itemToUpdate
+            },
+            Center: {
+                N: req.newQuota
+            },
+            Goods: {
+                N: req.newQuota
+            },
+            Amount: {
+                N: req.newQuota
+            }
+        }
+    }
+    dynamodb.putItem(params, function (err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data); // successful response
+            callback();
+        }
+    })
+}
 function getResults(req, callback) {
     //console.log("Entered getResults");
     //console.log(req);
@@ -433,4 +463,4 @@ exports.getAllOrders = getAllOrders;
 exports.getOpenOrders = getOpenOrders;
 exports.getCenters = getCenters;
 exports.updateCenters = updateCenters;
-
+exports.updateFarmerDB = updateFarmerDB;
