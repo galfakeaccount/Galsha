@@ -4,6 +4,7 @@
 //General Setting
 var express = require('express');
 var router = express.Router();
+var qLayer = require('../qLayer.js');
 
 // middleware specific to this router
 router.use(function timeLog(req, res, next) {
@@ -15,10 +16,17 @@ router.get('/', function(req, res, next) {
     res.render('centerModel/center', {"shippingDay": 0, "numberOfOrders": 230});
 });
 
-router.get('/stock', function(req, res, next) {
-    var items = getStock();
-    var totalItems = getSummeryOfStock();
-    res.render('centerModel/stock', {totalOffering: totalItems, farmerOffering: items});
+router.get('/stock', function(req, res) {
+    console.log("In stock info");
+    qLayer.getQuota(function (data) {
+        computeTotal(data, function(total){
+            console.log(total);
+            res.render('centerModel/stock', {
+                totalOffering: total,
+                farmerOffering: data
+            })
+        })
+    })
 });
 
 router.get('/orders', function(req, res) {
@@ -48,7 +56,25 @@ function getStock(){
     ];
     return items;
 }
-
+/**
+ * Sums the data from all farmers into items total amount
+ * @param data
+ */
+function computeTotal(data, callback){
+    var appleSum = 0;
+    var tomatoSum = 0;
+    data.Items.forEach(function(entry){
+        if(entry.offeredGoods.S == 'Tomatoes')
+            tomatoSum = (tomatoSum*1 +entry.Capacity.N*1);
+        else
+            appleSum = (appleSum*1 +entry.Capacity.N*1);
+    })
+    total = [
+        {"Name": "Apples", "Quota": appleSum},
+        {"Name": "Tomatoes", "Quota": tomatoSum}
+    ]
+    callback(total);
+}
 /*
  * Get a summery of the current stock.
  * Name - The name of the item.

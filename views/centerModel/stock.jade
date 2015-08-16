@@ -1,19 +1,19 @@
 extends ../layout
 block content
-   h1= 'Stock Summery'
+   h1= 'Stock Summary'
    div
-      legend Total Farmers Offering For This Week
+      legend Total Current Farmers Offering
       table#dataTable(width='350px', border='4')
          thead
             tr#headtag
                th Item
-               th In stock (KG)
-               th Ordered (KG)
+               th Available Stock (Kg)
+               th Ordered (Kg)
          tbody
             each item in totalOffering
                tr(align='center')
                   td= item.Name
-                  td= item.InStock
+                  td= item.Quota
                   td= item.Ordered
       br
       br
@@ -26,9 +26,9 @@ block content
                th Farmer Name
                th Offering (KG)
          tbody
-            each offer in farmerOffering
+            each offer in farmerOffering.Items
                tr(align='center')
-                  td= offer.Name
-                  td= offer.Farmer
-                  td= offer.stock
+                  td= offer.offeredGoods.S
+                  td= offer.farmerName.S
+                  td= offer.Capacity.N
 
