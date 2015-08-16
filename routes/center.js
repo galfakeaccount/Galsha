@@ -111,6 +111,7 @@ function computeTotal(data, callback){
  */
 function getSummeryOfStock(){
     var items = [
+        
         {"Name":"bananas", "InStock":12, "Ordered":3},
         {"Name":"tomatos", "InStock":34, "Ordered":23}
     ];
