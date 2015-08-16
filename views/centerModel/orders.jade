@@ -2,7 +2,14 @@ extends ../layout
 block content
    h1= 'Get Orders'
    div
-      form(action='/orders', method='POST')
+      form(action='/center/orders', method='POST')
+         fieldset#all_orders
+            legend Get all orders?
+               label.checkbox.inline
+               input#all_orders(type='checkbox', name='get_all_orders', value='true')
+               | Get all orders
+
+            br
          fieldset#shipping_day
             legend Choose Shipping day:
             select(name='shipping_day')
@@ -35,6 +42,6 @@ block content
             button.btn(onclick = "allOrders()") Get All Orders
                script.
                   function allOrders() {
-                     window.location.href = '/allOrders'
+                     window.location.href = '/center/allOrders'
                   }
 

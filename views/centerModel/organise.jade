@@ -1,0 +1,30 @@
+extends ../layout
+block content
+   h1= 'Orders'
+   br
+   div
+      form(action='/center/chooseFarmers', method= 'post')
+      legend All open orders
+         fieldset#distribution_details
+            table#openOrdersTable(width='350px', border='4')
+               thead
+                  tr#headtag
+                     th Distribution Center
+                     th Shipment Date
+                     th Apples
+                     th Tomatoes
+                     th Choose Farmer
+               tbody
+                  each center in data
+                     tr(align='center')
+                        td= center.name
+                        td= center.deliveryDate
+                        td= center.apples
+                        td= center.tomatoes
+                        td
+                           select(name= center.name)
+                              each farmer in farmers
+                                 option(value=farmer) #{farmer}
+         button.btn(type='submit') Submit
+
+

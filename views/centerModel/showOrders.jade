@@ -1,27 +1,25 @@
 extends ../layout
 block content
-    h1= 'Get Orders'
+   h1= 'Orders'
+   br
    div
       legend Total Farmers Offering For This Week
-      table#dataTable(width='350px', border='4')
+      table#ordersTable(width='350px', border='4')
          thead
             tr#headtag
                th Phone
                th Status
-               th Order Week
-               th Order Day
-               th Items
+               th Order Date
+               th Order ID
+               th Center
          tbody
-            each order in orders
+            each order in data
                tr(align='center')
-                  td= order.Phone
-                  td= order.status
-                  td= order.sWeek
-                  td= order.sDay
-                  td(white-space='pre')
-                     each item in order.Items
-                        p= item.type + ',' + item.quant
-                        br
-                        p= item.type
-      br
-      br
+                  td= order.Phone.S
+                  td= order.Status.S.toLowerCase()
+                  td= order.deliveryDate.S
+                  td= order.orderID.S
+                  td= order.Center.S
+
+         br
+         br
