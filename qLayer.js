@@ -9,6 +9,8 @@ var dynamodb = new AWS.DynamoDB(); //New DynamoDB Instance
 var sqs = new AWS.SQS();
 var ordersQueueUri = 'https://sqs.us-east-1.amazonaws.com/016493201532/farmersDirectOrders';
 var ordersCounter;
+var async = require('async');
+var DISTRIBUTION_CENTERS = ["google", "microsoft", "intel"];
 
 function getDetails(req, callback) {
     //console.log("In get name");
@@ -31,6 +33,7 @@ function getDetails(req, callback) {
         }
     });
 }
+
 function addDetails(req, callback) {
     //console.log("In add name");
     //console.log(req);
@@ -92,14 +95,92 @@ function getOpenOrders(callback) { //Query all open orders
             console.log(err); // an error occurred
         }
         else {
-            console.log(data); // successful response
-            callback(data);
+            callback(data.Items); // successful response
         }
     });
 }
 
+/*
+ * Divide open orders by centers.
+ */
+function getCenters(orders, callback) {
+    var centers = {};
+    var count = orders.length;
+    async.forEach(orders, function(entry) {
+        // get order info by orderID
+        retrieveOrder(entry.orderID.S, function(orderInfo){
+            if (centers[entry.Center.S]){
+                centers[entry.Center.S].push(orderInfo.Items[0]);
+            } else {
+                centers[entry.Center.S] =  [orderInfo.Items[0]];
+            }
+            count--;
+            if (count == 0){
+                callback(centers);
+            }
+        });
+    });
+}
+
+function updateCenters(centers, callback){
+    count = centers.length;
+    DISTRIBUTION_CENTERS.forEach(function(centerName) {
+        sumCenter(centerName, centers[centerName]);
+        count--;
+        if (count == 0){
+            callback(); // Will get the data from the server
+        }
+    });
+}
+
+function sumCenter(centerName, centerOrders){
+    var count = centerOrders.length;
+    var apples = 0;
+    var tomatoes = 0;
+    async.forEach(centerOrders, function(order) {
+        // get order info by orderID
+        //console.log(order);
+        apples += order.Apples.N*1;
+        tomatoes += order.Tomatoes.N*1;
+        count--;
+        if (count == 0){
+            console.log(centerName, ", apples:", apples ,", tomatoes: ", tomatoes);
+            updateCenter({cName: centerName, fName: "Jack", offeredGoods: "Tomatoes" , orders : tomatoes});
+            updateCenter({cName: centerName, fName: "Dani", offeredGoods: "Apples" , orders : apples});
+        }
+    });
+}
+
+function updateCenter(req){
+    var params = {
+        TableName: 'totalOrders',
+        Item: {
+            centerName: {
+                S: req.cName
+            },
+            farmerName: {
+                S: req.fName
+            },
+            offeredGoods: {
+                S: req.itemToUpdate
+            },
+            orders: {
+                N: req.OrdersTotal
+            }
+        }
+    }
+    dynamodb.putItem(params, function (err, data) {
+        if (err) {
+            console.log(err); // an error occurred
+        }
+        else {
+            console.log(data); // successful response
+            callback();
+        }
+    })
+}
+
 function getOrders(req, callback) { //Query all orders under specific phone number
-    //console.log("In get orders");
     var params = { //Params to be sent according to the structure of the table (In PDF file).
         "TableName": "ordersDB",
         "KeyConditionExpression":  "Phone = :phoneval",
@@ -120,8 +201,6 @@ function getOrders(req, callback) { //Query all orders under specific phone numb
 }
 
 function retrieveOrder(req, callback) { //Get a specific order
-    //console.log("In retrieve order");
-    //console.log(req);
     if (req) {
         var params = { //Params to be sent according to the structure of the table (In PDF file).
             "TableName": "orderByID",
@@ -352,3 +431,6 @@ exports.updateQuota = updateQuota;
 exports.addDetails = addDetails;
 exports.getAllOrders = getAllOrders;
 exports.getOpenOrders = getOpenOrders;
+exports.getCenters = getCenters;
+exports.updateCenters = updateCenters;
+

@@ -30,29 +30,13 @@ router.get('/stock', function(req, res) {
 });
 
 router.get('/orders', function(req, res) {
-    res.render('centerModel/orders', {monday: "4/8", thersday: "7/8"});
+    res.render('centerModel/orders', {Monday: "20150817", Thursday: "20150820"});
 });
 
 router.get('/organise', function(req, res) {
     // 1. get all open orders
-    qLayer.getOpenOrders(function(data){
-        console.log("In organize");
-        console.log(data.Items);
-        var centers = {};
-        data.Items.forEach(function(entry, index) {
-            // get order info by orderID
-            qLayer.retrieveOrder(entry.orderID.S, function(orderInfo){
-                console.log(orderInfo.Items);
-                if (centers[entry.Center.S]){
-                    centers[entry.Center.S].apples += orderInfo.Items.apples;
-                    centers[entry.Center.S].tomatoes += orderInfo.Items.tomatoes;
-                } else {
-                    centers[entry.Center.S] =
-                    {apples: orderInfo.Items.apples, tomatoes : orderInfo.Items.tomatoes, farmer: ""};
-                }
-                console.log("centers:", centers);
-            });
-        });
+    qLayer.getOpenOrders(function(orders) {
+        qLayer.getCenters(orders, qLayer.updateCenters);
 
     });
     // 2. devide orders by centers
