@@ -5,10 +5,6 @@
 var express = require('express');
 var router = express.Router();
 var qLayer = require('../qLayer.js');
-<<<<<<< HEAD
-=======
-
->>>>>>> origin/master
 
 // middleware specific to this router
 router.use(function timeLog(req, res, next) {
